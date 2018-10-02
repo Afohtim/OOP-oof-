@@ -1,5 +1,6 @@
 #include <iostream>
 #include "List.h"
+#include "Tree.h"
 
 int main()
 {

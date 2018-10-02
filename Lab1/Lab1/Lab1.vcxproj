@@ -111,10 +111,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BinTree.h" />
+    <ClInclude Include="BS_Tree.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="Tree.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BinTree.cpp" />
+    <ClCompile Include="BS_Tree.cpp" />
     <ClCompile Include="List.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Tree.cpp" />
