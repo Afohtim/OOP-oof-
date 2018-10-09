@@ -1,6 +1,6 @@
-.sln
-.vcxproj.filters
-.vcxproj
+*.sln
+*.vcxproj.filters
+*.vcxproj
 
 # Created by https://www.gitignore.io/api/c++,visualstudio
 
