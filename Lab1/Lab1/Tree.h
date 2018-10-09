@@ -54,7 +54,7 @@ TNode<TValue>* Tree<TValue>::dfs(TNode<TValue>* node, unsigned key)
 }
 
 template<typename TValue>
-void Tree<TValue>::insert(unsigned key, TValue value)
+void Tree<TValue>::insert(TValue value, unsigned key)
 {
 	TNode<TValue>* node = new TNode<TValue>;
 	node->val = value;
