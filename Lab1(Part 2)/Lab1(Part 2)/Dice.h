@@ -5,7 +5,7 @@ class Dice
 {
 private:
 	int num_of_edges;
-	std::vector<double> edges_probability;
+	std::vector<long double> edges_probability;
 public:
 	int get_max();
 	void set_probability(std::vector<double> &probabilities);

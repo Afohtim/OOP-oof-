@@ -32,6 +32,7 @@ void Game::show_sums(int sum)
 	{
 		variants *= dices[i].get_max();
 	}
+	long double total_percent = 0.0;
 	for (int i = 0; i < variants; ++i)
 	{
 		int current_sum = 0;
@@ -41,15 +42,28 @@ void Game::show_sums(int sum)
 		{
 			for (auto roll : rolls)
 				std::cout << roll << ' ';
-			double percent = 1;
+			long double percent = 100.0;
 			for (int j = 0; j < dices.size(); ++j)
 			{
 				percent *= dices[j].get_probability(rolls[j]);
 			}
-			std::cout << std::fixed << std::setprecision(2) << percent << "%\n";
+			total_percent += percent;
+			std::cout << std::fixed << std::setprecision(10) << percent << "%\n";
 
 		}
+		rolls[0]++;
+		for (int j = 0; j < rolls.size() - 1; ++j)
+		{
+			if (rolls[j] > dices[j].get_max())
+			{
+				rolls[j] = 1;
+				rolls[j + 1]++;
+			}
+			else
+			{
+				break;
+			}
+		}
 	}
-	// add 1 to first
-
+	std::cout << "Total: " << total_percent << '\n';
 }
