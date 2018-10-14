@@ -3,6 +3,6 @@
 int main()
 {
 	Game LUL;
-	LUL.show_sums(15);
+	LUL.show_sums(17);
 	system("pause");
 }

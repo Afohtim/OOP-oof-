@@ -3,7 +3,7 @@
 template <typename T>
 struct ListElem
 {
-	ListElem* next;
+	ListElem<T>* next;
 	T value;
 	ListElem(T val, ListElem<T>* nextElem = nullptr);
 };
@@ -103,7 +103,7 @@ void List<T>::push(int index, T value)
 template<typename T>
 void List<T>::pushBack(T value)
 {
-	push(len - 1, value);
+	push(len, value);
 }
 
 template<typename T>
@@ -118,7 +118,7 @@ void List<T>::erase(int index)
 	{
 		ListElem<T>* toErase = head;
 		head = head->next;
-		delete toErase
+		delete toErase;
 	}
 	else
 	{

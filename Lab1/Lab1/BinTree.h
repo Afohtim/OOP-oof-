@@ -6,6 +6,7 @@ struct BinNode
 	BinNode* left;
 	BinNode* right;
 	int val;
+	
 
 };
 

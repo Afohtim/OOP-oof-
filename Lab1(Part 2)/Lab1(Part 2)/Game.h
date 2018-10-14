@@ -12,5 +12,6 @@ public:
 	~Game();
 
 	void show_sums(int sum);
+	void set_dices(std::vector<std::vector<double> > config);
 };
 

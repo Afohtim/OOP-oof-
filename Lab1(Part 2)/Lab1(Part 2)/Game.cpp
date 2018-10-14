@@ -4,8 +4,8 @@
 
 Game::Game()
 {
-	const int dices_num = 7;
-	int arr[dices_num] = {2, 4, 6, 8, 10, 12, 20};
+	const int dices_num = 5;
+	int arr[dices_num] = {2, 4, 4, 4, 4};
 	for (int i = 0; i < dices_num; ++i)
 	{
 		dices.push_back(Dice(arr[i]));
@@ -13,7 +13,7 @@ Game::Game()
 		std::vector<double> probabilities;
 		for (double j = 0; j < arr[i]; ++j)
 		{
-			probabilities.push_back(j / sum);
+			probabilities.push_back((j+1) / sum);
 		}
 		dices.back().set_probability(probabilities);
 	}
@@ -35,6 +35,11 @@ void Game::show_sums(int sum)
 	long double total_percent = 0.0;
 	for (int i = 0; i < variants; ++i)
 	{
+		/*for (auto roll : rolls)
+		{
+			std::cout << roll << ' ';
+		}
+		std::cout << '\n';*/
 		int current_sum = 0;
 		for (auto roll : rolls)
 			current_sum += roll;
@@ -48,7 +53,7 @@ void Game::show_sums(int sum)
 				percent *= dices[j].get_probability(rolls[j]);
 			}
 			total_percent += percent;
-			std::cout << std::fixed << std::setprecision(10) << percent << "%\n";
+			std::cout << std::fixed << std::setprecision(4) << percent << "%\n";
 
 		}
 		rolls[0]++;
@@ -65,5 +70,14 @@ void Game::show_sums(int sum)
 			}
 		}
 	}
-	std::cout << "Total: " << total_percent << '\n';
+	std::cout << "Total: " << total_percent << "%\n";
+}
+
+void Game::set_dices(std::vector<std::vector<double>> config)
+{
+	dices.clear();
+	for (int i = 0; i < config.size(); ++i)
+	{
+		
+	}
 }
