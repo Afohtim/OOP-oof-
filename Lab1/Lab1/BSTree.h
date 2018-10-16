@@ -18,13 +18,13 @@ protected:
 	void delSubtree(BSNode<TValue>* node);
 	BSNode<TValue>* root;
 	void delNode(BSNode<TValue>* node);
+	void showSubTree(BSNode<TValue>* rootNode);
 public:
 	BSTree();
 	~BSTree();
 
 	void insert(TValue value);
 	void erase(TValue value);
-	void showSubTree(BSNode<TValue>* rootNode);
 	void showTree();
 };
 
@@ -66,6 +66,10 @@ void BSTree<TValue>::delNode(BSNode<TValue>* node)
 		}
 		node->val = subnode->val;
 		delete subnode;
+	}
+	else
+	{
+		delete node;
 	}
 }
 
