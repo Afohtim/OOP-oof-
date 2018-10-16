@@ -4,41 +4,51 @@ template<typename TValue>
 struct BSNode
 {
 	BSNode(TValue value);
+	~BSNode();
 	TValue val;
-	BSNode<TValue>* parent;
 	BSNode<TValue>* left;
-	BSNode<TValue>* right;  
+	BSNode<TValue>* right;
+	BSNode<TValue>* parent;
 };
 
 template<typename TValue>
 class BSTree
 {
 protected:
-	void del_subtree(BSNode<TValue>* node);
-	BSNode* root;
+	void delSubtree(BSNode<TValue>* node);
+	BSNode<TValue>* root;
 	void delNode(BSNode<TValue>* node);
 public:
 	BSTree();
 	~BSTree();
 
-	void insert(TValue value, TValue parent = NULL);
+	void insert(TValue value);
 	void erase(TValue value);
-	void showSubTree(MultiNode<TValue>* rootNode);
+	void showSubTree(BSNode<TValue>* rootNode);
 	void showTree();
 };
 
 template<typename TValue>
-inline void BSTree<TValue>::del_subtree(BSNode<TValue>* node)
+inline void BSTree<TValue>::delSubtree(BSNode<TValue>* node)
 {
-
+	if (node == nullptr || (node->left == nullptr && node->right == nullptr))
+	{
+		delete node;
+	}
+	else
+	{
+		delSubtree(node->left);
+		delSubtree(node->right);
+		delete node;
+	}
 }
 
 template<typename TValue>
-inline void BSTree<TValue>::delNode(BSNode<TValue>* node)
+void BSTree<TValue>::delNode(BSNode<TValue>* node)
 {
 	if (node->left != nullptr)
 	{
-		(BSNode<TValue>* subnode = node->left;
+		BSNode<TValue>* subnode = node->left;
 		while (subnode->right != nullptr)
 		{
 			subnode = subnode->right;
@@ -49,7 +59,7 @@ inline void BSTree<TValue>::delNode(BSNode<TValue>* node)
 	}
 	else if (node->right != nullptr)
 	{
-		Node *subnode = node->right;
+		BSNode<TValue>* subnode = node->right;
 		while (subnode->left != nullptr)
 		{
 			subnode = subnode->left;
@@ -60,7 +70,19 @@ inline void BSTree<TValue>::delNode(BSNode<TValue>* node)
 }
 
 template<typename TValue>
-inline void BSTree<TValue>::insert(TValue value, TValue parent)
+inline BSTree<TValue>::BSTree()
+{
+	root = nullptr;
+}
+
+template<typename TValue>
+inline BSTree<TValue>::~BSTree()
+{
+	delSubtree(root);
+}
+
+template<typename TValue>
+inline void BSTree<TValue>::insert(TValue value)
 {
 	BSNode<TValue>* inserted = new BSNode<TValue>(value);
 	if (root == nullptr)
@@ -72,7 +94,7 @@ inline void BSTree<TValue>::insert(TValue value, TValue parent)
 		BSNode<TValue>* parent = root;
 		while (true)
 		{
-			if (parent->val > insert->val)
+			if (parent->val > inserted->val)
 			{
 				if (parent->left == nullptr)
 				{
@@ -113,6 +135,7 @@ inline void BSTree<TValue>::erase(TValue value)
 		if (tempNode->val == value)
 		{
 			delNode(tempNode);
+			return;
 		}
 		else if (tempNode->val < value)
 		{
@@ -124,4 +147,57 @@ inline void BSTree<TValue>::erase(TValue value)
 		}
 	}
 	
+}
+
+template<typename TValue>
+void BSTree<TValue>::showSubTree(BSNode<TValue>* rootNode)
+{
+	if (rootNode == nullptr)
+		return;
+	std::cout << rootNode->val << ": ";
+	if (rootNode->left != nullptr)
+	{
+		std::cout << rootNode->left->val << ' ';
+	}
+	if (rootNode->right != nullptr)
+	{
+		std::cout << rootNode->right->val;
+	}
+	std::cout << '\n';
+	showSubTree(rootNode->left);
+	showSubTree(rootNode->right);
+	
+	
+	
+}
+
+template<typename TValue>
+inline void BSTree<TValue>::showTree()
+{
+	showSubTree(root);
+}
+
+template<typename TValue>
+inline BSNode<TValue>::BSNode(TValue value)
+{
+	val = value;
+	left = nullptr;
+	right = nullptr;
+	parent = nullptr;
+}
+
+template<typename TValue>
+inline BSNode<TValue>::~BSNode()
+{
+	if (this->parent != nullptr)
+	{
+		if (this == parent->left)
+		{
+			parent->left = nullptr;
+		}
+		else
+		{
+			parent->right = nullptr;
+		}
+	}
 }

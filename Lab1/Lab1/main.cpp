@@ -1,6 +1,7 @@
 #include <iostream>
 #include "List.h"
 #include "MultiTree.h"
+#include "BSTree.h"
 
 int main()
 {
@@ -14,10 +15,13 @@ int main()
 	}
 	std::cout << '\n';
 
-	MultiTree<int> tree;
+	BSTree<int> tree;
 	tree.insert(4);
-	tree.insert(3, 4);
+	tree.insert(3);
+	tree.insert(6);
+	tree.insert(5);
 	tree.showTree();
-	tree.erase(3);
+	tree.erase(4);
+	tree.showTree();
 	system("pause");
 }
