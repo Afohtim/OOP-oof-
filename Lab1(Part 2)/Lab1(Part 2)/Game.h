@@ -6,7 +6,8 @@
 class Game
 {
 private:
-	std::vector<Dice> dices;
+	std::vector<Dice*> dices;
+
 public:
 	Game();
 	~Game();
