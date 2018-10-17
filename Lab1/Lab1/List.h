@@ -22,7 +22,7 @@ public:
 	void push(int index, T value);
 	void pushBack(T value); // not optimized
 	void erase(int index);
-	T List<T>::operator[](int index);
+	T operator[](int index);
 };
 
 template<typename T>

@@ -24,7 +24,7 @@ Game::~Game()
 {
 }
 
-void Game::show_sums(int sum)
+double Game::show_sums(int sum)
 {
 	std::vector<int> rolls(dices.size(), 1);
 	int variants = 1;
@@ -71,6 +71,7 @@ void Game::show_sums(int sum)
 		}
 	}
 	std::cout << "Total: " << total_percent << "%\n";
+	return total_percent;
 }
 
 void Game::set_dices(std::vector<std::vector<double>> config)
