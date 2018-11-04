@@ -4,19 +4,24 @@
 #include <QDialog>
 
 namespace Ui {
-class NewTimerWindow;
+class NewTimerDialog;
 }
 
-class NewTimerWindow : public QDialog
+class NewTimerDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit NewTimerWindow(QWidget *parent = nullptr);
-    ~NewTimerWindow();
+    explicit NewTimerDialog(QWidget *parent = nullptr);
+    ~NewTimerDialog();
 
 private:
-    Ui::NewTimerWindow *ui;
+    Ui::NewTimerDialog *ui;
+private slots:
+    void sendInfoAndClose();
+signals:
+    void sendTimerInfo(int);
+
 };
 
 #endif // NEWTIMERWINDOW_H
