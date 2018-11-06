@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include "newtimerwindow.h"
+#include "timerwidget.h"
+
 #include <vector>
 #include <QMainWindow>
 #include <QTimer>
@@ -25,17 +27,18 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QString time;
     vector<QTimer*> timers;
-    QWidget* timersWidget;
-
-    QString msToStringTime(int ms);
+    QWidget* timerScrollWidget;
+    QString msToStringTime(int);
+    int scrollWidgetSize = 0;
+    int timerWidgetSize;
 
 
 private slots:
     void updateTime();
     void newTimerSetup();
     void addTimerToList(int);
+
 
 };
 

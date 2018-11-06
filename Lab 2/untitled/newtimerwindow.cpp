@@ -7,9 +7,6 @@ NewTimerDialog::NewTimerDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->hoursLabel->setText("hours");
-    ui->minutesLabel->setText("minutes");
-    ui->secondsLabel->setText("seconds");
 
     connect(ui->confirmButton, SIGNAL(clicked()), this, SLOT(sendInfoAndClose()));
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(close()));

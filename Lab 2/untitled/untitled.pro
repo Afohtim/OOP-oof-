@@ -27,15 +27,18 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    newtimerwindow.cpp
+    newtimerwindow.cpp \
+    timerwidget.cpp
 
 HEADERS += \
         mainwindow.h \
-    newtimerwindow.h
+    newtimerwindow.h \
+    timerwidget.h
 
 FORMS += \
         mainwindow.ui \
-    newtimerwindow.ui
+    newtimerwindow.ui \
+    timerwidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

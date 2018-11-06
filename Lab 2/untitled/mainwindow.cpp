@@ -10,6 +10,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    timerWidgetSize = 115;
+    timerScrollWidget = new QWidget;
+    timerScrollWidget->setLayout(new QVBoxLayout(this));
+    timerScrollWidget->setMinimumHeight(200);
+    ui->timerWidgets->setWidget(timerScrollWidget);
+
     ui->closeButton->setText("Close");
     connect(ui->closeButton, SIGNAL(clicked()), qApp, SLOT(quit()));
     connect(ui->newTimerButton, SIGNAL(clicked()), this, SLOT(newTimerSetup()));
@@ -27,16 +33,6 @@ MainWindow::~MainWindow()
 void MainWindow::updateTime()
 {
     ui->label->setText(QTime::currentTime().toString("hh:mm:ss AP"));
-    for(unsigned i = 0; i < timers.size(); ++i)
-    {
-        int remaining_time = timers[i]->remainingTime();
-        if(remaining_time < 500)
-        {
-            timers[i]->stop();
-        }
-        ui->listWidget->item(i)->setText(msToStringTime(remaining_time));
-
-    }
 }
 
 void MainWindow::newTimerSetup()
@@ -49,10 +45,10 @@ void MainWindow::newTimerSetup()
 void MainWindow::addTimerToList(int timeLeft)
 {
     QString time = msToStringTime(timeLeft);
-    ui->listWidget->addItem(time);
-    timers.push_back(new QTimer(this));
-    timers.back()->start(timeLeft);
-    //time += QTime(hours, minutes, seconds).toString("hh:mm:ss") + "\n";
+    auto timerWidget = new TimerWidget(timeLeft, QString("timer"), this);
+    scrollWidgetSize += timerWidgetSize;
+    timerScrollWidget->setMinimumHeight(scrollWidgetSize);
+    timerScrollWidget->layout()->addWidget(timerWidget);
 }
 
 QString MainWindow::msToStringTime(int ms)

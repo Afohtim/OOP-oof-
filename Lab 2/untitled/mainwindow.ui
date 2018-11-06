@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>385</width>
-    <height>307</height>
+    <width>462</width>
+    <height>365</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="closeButton">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>210</y>
+      <x>200</x>
+      <y>280</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -43,8 +43,8 @@
    <widget class="QPushButton" name="newTimerButton">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>210</y>
+      <x>110</x>
+      <y>280</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -53,15 +53,28 @@
      <string>New Timer</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QScrollArea" name="timerWidgets">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>90</x>
       <y>0</y>
-      <width>256</width>
-      <height>192</height>
+      <width>331</width>
+      <height>250</height>
      </rect>
     </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>329</width>
+       <height>248</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -69,7 +82,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>385</width>
+     <width>462</width>
      <height>21</height>
     </rect>
    </property>
