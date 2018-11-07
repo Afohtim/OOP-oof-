@@ -63,6 +63,7 @@ void MainWindow::addTimerToList(int timeLeft)
     timerScrollWidget->setMinimumHeight(scrollTimerWidgetSize);
     timerScrollWidget->layout()->addWidget(timerWidget);
     connect(timerWidget, SIGNAL(destruction()), this, SLOT(timerDeletion()));
+    connect(timerWidget, SIGNAL(alarm(QString)), this, SLOT(timerAlarm(QString)));
 
 }
 
@@ -77,6 +78,7 @@ void MainWindow::addAlarmToList(int alarmTime)
     alarmScrollWidget->setMinimumHeight(scrollAlarmWidgetSize);
     alarmScrollWidget->layout()->addWidget(alarmWidget);
     connect(alarmWidget, SIGNAL(destruction()), this, SLOT(alarmDeletion()));
+    connect(alarmWidget, SIGNAL(alarm(QString)), this, SLOT(alarm(QString)));
 }
 
 QString MainWindow::msToStringTime(int ms)
@@ -98,3 +100,16 @@ void MainWindow::alarmDeletion()
     scrollAlarmWidgetSize -= subwidgetSize;
     alarmScrollWidget->setMinimumHeight(scrollAlarmWidgetSize);
 }
+
+void MainWindow::timerAlarm(QString message)
+{
+    auto wind = new NotificationWindow(message, this);
+    wind->exec();
+}
+
+void MainWindow::alarm(QString message)
+{
+    auto wind = new NotificationWindow(message + "\n" +QTime::currentTime().toString("hh:mm AP"), this);
+    wind->exec();
+}
+

@@ -7,6 +7,7 @@ AlarmWidget::AlarmWidget(QTime alarm_time, QString name, QWidget *parent):
 {
     ui->setupUi(this);
 
+    ui->nameLabel->setText(name);
     alarmTimer = new QTimer(this);
     alarmTime = new QTime(alarm_time.hour(), alarm_time.minute(), alarm_time.second());
     alarmName = name;
@@ -28,7 +29,13 @@ AlarmWidget::~AlarmWidget()
 
 void AlarmWidget::start()
 {
-    alarmTimer->start(alarmTime->elapsed());
+    int timerLength = alarmTime->msecsSinceStartOfDay() - QTime::currentTime().msecsSinceStartOfDay();
+    if(timerLength < 0)
+    {
+        timerLength += 24 * 3600 * 1000;
+    }
+    timerLength += 1000;
+    alarmTimer->start(timerLength);
 }
 
 void AlarmWidget::changeMode()
@@ -49,7 +56,7 @@ void AlarmWidget::changeMode()
 
 void AlarmWidget::alarmAndStop()
 {
-    emit alarm();
+    emit alarm(alarmName);
     changeMode();
 }
 

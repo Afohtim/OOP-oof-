@@ -72,7 +72,7 @@ void TimerWidget::displayTime()
 void TimerWidget::alarmAndStop()
 {
     //Beep Beep Alarm not ready
-    emit alarm();
+    emit alarm(timerName);
     changeMode();
 }
 

@@ -5,6 +5,7 @@
 #include "timerwidget.h"
 #include "alarmwidget.h"
 #include "newalarmwindow.h"
+#include "notificationwindow.h"
 
 #include <vector>
 #include <QMainWindow>
@@ -46,6 +47,8 @@ private slots:
     void addAlarmToList(int);
     void timerDeletion();
     void alarmDeletion();
+    void alarm(QString);
+    void timerAlarm(QString);
 
 
 };

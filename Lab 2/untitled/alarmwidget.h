@@ -32,7 +32,7 @@ private slots:
     void closeWindow();
 
 signals:
-    void alarm();
+    void alarm(QString);
     void destruction();
 };
 
