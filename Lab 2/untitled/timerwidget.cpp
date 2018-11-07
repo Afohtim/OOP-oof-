@@ -41,6 +41,11 @@ TimerWidget::~TimerWidget()
     delete ui;
 }
 
+void TimerWidget::setGroup(QString newGroup)
+{
+    ui->groupEdit->document()->setPlainText(newGroup);
+}
+
 void TimerWidget::changeMode()
 {
     if(active)
@@ -82,5 +87,7 @@ void TimerWidget::alarmAndStop()
 void TimerWidget::closeWindow()
 {
     emit destruction(id);
+    if(active)
+        changeMode();
     this->close();
 }

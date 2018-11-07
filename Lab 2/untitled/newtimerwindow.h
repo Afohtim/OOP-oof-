@@ -25,7 +25,7 @@ private slots:
     void openRingtones();
     void setRingtone(QString);
 signals:
-    void sendTimerInfo(int, QString, bool);
+    void sendTimerInfo(int, QString, bool, QString);
 
 };
 

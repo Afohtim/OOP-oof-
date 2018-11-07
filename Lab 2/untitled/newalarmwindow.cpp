@@ -21,7 +21,7 @@ NewAlarmWindow::~NewAlarmWindow()
 void NewAlarmWindow::sendInfoAndClose()
 {
     QTime triggerTime = ui->timeSet->time();
-    emit sendAlarmInfo(triggerTime.msecsSinceStartOfDay(), ringtoneName, ui->startBox->isChecked());
+    emit sendAlarmInfo(triggerTime.msecsSinceStartOfDay(), ringtoneName, ui->startBox->isChecked(),ui->alarmName->toPlainText());
     this->close();
 }
 

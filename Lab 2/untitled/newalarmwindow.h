@@ -24,7 +24,7 @@ private slots:
     void openRingtones();
     void setRingtone(QString);
 signals:
-    void sendAlarmInfo(int, QString, bool);
+    void sendAlarmInfo(int, QString, bool, QString);
 
 };
 

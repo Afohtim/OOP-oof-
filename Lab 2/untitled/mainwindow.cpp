@@ -4,7 +4,6 @@
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QString>
-#include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -40,26 +39,35 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(switchMute()));
     connect(ui->startGroupButton, SIGNAL(clicked()), this, SLOT(startGroup()));
     connect(ui->stopGroupButton, SIGNAL(clicked()), this, SLOT(stopGroup()));
+    connect(ui->alarmFilterButton, SIGNAL(clicked()), this, SLOT(filterAlarm()));
+    connect(ui->alarmFilterDisableButton, SIGNAL(clicked()), this, SLOT(disableFilterAlarm()));
 
 
     ifstream fin("config.txt");
     std::string s;
     while(std::getline(fin, s))
     {
+        if(!fin.good())
+            break;
         std::stringstream stringin(s);
-        std::string type, name;
+        std::string type, name, ringName;
         int ms;
-        stringin >> type >> name >> ms;
+        stringin >> type >> ringName >> ms >> name;
         if(type == "alarm")
         {
             int isOn;
-            stringin >> isOn;
-            addAlarmToList(ms, QString::fromStdString(name), isOn);
+            std::string group;
+            stringin >> isOn >> group;
+            addAlarmToList(ms, QString::fromStdString(ringName), isOn, QString::fromStdString(name));
+            alarmWidgets.back()->setGroup(QString::fromStdString(group));
 
         }
         else if (type == "timer")
         {
-            addTimerToList(ms, QString::fromStdString(name), false);
+            std::string group;
+            stringin >> group;
+            addTimerToList(ms, QString::fromStdString(ringName), false, QString::fromStdString(name));
+            timerWidgets.back()->setGroup(QString::fromStdString(group));
         }
     }
 
@@ -74,12 +82,12 @@ MainWindow::~MainWindow()
     ofstream fout("config.txt");
     for(auto timer : timerWidgets)
     {
-        fout << "timer" << ' ' << timer->timerName.toStdString() << ' ' << timer->ms << '\n';
+        fout << "timer" << ' ' << timer->ringtoneName.toStdString() << ' ' << timer->ms << ' ' << timer->timerName.toStdString() << ' ' << timer->group.toStdString() << '\n';
     }
 
     for(auto alarm : alarmWidgets)
     {
-        fout << "alarm" << ' ' << alarm->alarmName.toStdString() << ' ' << alarm->ms << ' ' << alarm->active << '\n';
+        fout << "alarm" << ' ' << alarm->ringtoneName.toStdString() << ' ' << alarm->ms << ' ' << alarm->alarmName.toStdString() << ' ' << alarm->active << ' ' << alarm->group.toStdString() << '\n';
     }
 }
 
@@ -93,20 +101,20 @@ void MainWindow::updateTime()
 void MainWindow::newTimerSetup()
 {
     auto timerSetupWindow = new NewTimerDialog(this);
-    connect(timerSetupWindow, SIGNAL(sendTimerInfo(int, QString, bool)), this, SLOT(addTimerToList(int, QString, bool)));
+    connect(timerSetupWindow, SIGNAL(sendTimerInfo(int, QString, bool, QString)), this, SLOT(addTimerToList(int, QString, bool, QString)));
     timerSetupWindow->exec();
 }
 
 void MainWindow::newAlarmSetup()
 {
     auto alarmSetupWindow = new NewAlarmWindow(this);
-    connect(alarmSetupWindow, SIGNAL(sendAlarmInfo(int, QString, bool)), this, SLOT(addAlarmToList(int, QString, bool)));
+    connect(alarmSetupWindow, SIGNAL(sendAlarmInfo(int, QString, bool, QString)), this, SLOT(addAlarmToList(int, QString, bool, QString)));
     alarmSetupWindow->exec();
 }
 
-void MainWindow::addTimerToList(int timeLeft, QString ringName, bool startNow)
+void MainWindow::addTimerToList(int timeLeft, QString ringName, bool startNow, QString name)
 {
-    auto timerWidget = new TimerWidget(timeLeft, QString("timer"), ringName, this);
+    auto timerWidget = new TimerWidget(timeLeft, name, ringName, this);
     timerWidget->id = nextTimerId++;
     currentTimers++;
     if(startNow)
@@ -120,13 +128,13 @@ void MainWindow::addTimerToList(int timeLeft, QString ringName, bool startNow)
 
 }
 
-void MainWindow::addAlarmToList(int alarmTime, QString ringName, bool startNow)
+void MainWindow::addAlarmToList(int alarmTime, QString ringName, bool startNow, QString name)
 {
     int hours = alarmTime/1000/3600;
     int minutes = alarmTime/1000/60 - hours * 60;
     int seconds = alarmTime/1000 - hours * 3600 - minutes * 60;
     QTime alarm_time = QTime(hours, minutes, seconds);
-    auto alarmWidget = new AlarmWidget(alarm_time, QString("alarm"), ringName, this);
+    auto alarmWidget = new AlarmWidget(alarm_time, name, ringName, this);
     alarmWidget->id = nextAlarmId++;
     currentAlarms++;
     if(startNow)
@@ -168,6 +176,7 @@ void MainWindow::alarmDeletion(int id)
     {
         if(alarmWidgets[i]->id == id)
         {
+            alarmScrollWidget->layout()->removeWidget(alarmWidgets[i]);
             alarmWidgets.erase(alarmWidgets.begin() + i);
             break;
         }
@@ -233,7 +242,6 @@ void MainWindow::stopGroup()
 {
     for(auto timer : timerWidgets)
     {
-        std::cout << timer->group.toStdString() << ' ' << ui->groupEdit->toPlainText().toStdString() << '\n';
         if(timer->group == ui->groupEdit->toPlainText())
         {
             if(timer->active)
@@ -254,4 +262,35 @@ void MainWindow::stopGroup()
         }
     }
 }
+
+void MainWindow::filterAlarm()
+{
+    for(int i = 0; i < alarmScrollWidget->layout()->count(); ++i)
+    {
+        alarmScrollWidget->layout()->itemAt(i)->widget()->hide();
+    }
+    currentAlarms = 0;
+
+    for(int i = 0; i < alarmScrollWidget->layout()->count(); ++i)
+    {
+        auto alarm = alarmWidgets[i];
+        if(alarm->ms >= ui->fromAlarm->time().msecsSinceStartOfDay() && alarm->ms <= ui->toAlarm->time().msecsSinceStartOfDay() )
+        {
+            alarmScrollWidget->layout()->itemAt(i)->widget()->show();
+            currentAlarms++;
+        }
+    }
+
+}
+
+void MainWindow::disableFilterAlarm()
+{
+    for(int i = 0; i < alarmScrollWidget->layout()->count(); ++i)
+    {
+        alarmScrollWidget->layout()->itemAt(i)->widget()->show();
+    }
+    currentAlarms = alarmScrollWidget->layout()->count();
+}
+
+
 

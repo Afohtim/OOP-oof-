@@ -22,7 +22,7 @@ NewTimerDialog::~NewTimerDialog()
 void NewTimerDialog::sendInfoAndClose()
 {
     int elapcedTime = 1000*(ui->timeSet->time().hour()*3600 + ui->timeSet->time().minute()*60 + ui->timeSet->time().second());
-    emit sendTimerInfo(elapcedTime, ringtoneName, ui->startBox->isChecked());
+    emit sendTimerInfo(elapcedTime, ringtoneName, ui->startBox->isChecked(), ui->timerName->toPlainText());
     this->close();
 }
 

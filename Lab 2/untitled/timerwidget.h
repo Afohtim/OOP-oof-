@@ -22,13 +22,15 @@ public:
     bool active;
     QString timerName;
     int ms;
+    QString ringtoneName;
+
+    void setGroup(QString);
 
 private:
     Ui::TimerWidget *ui;
     QString msToStringTime(int ms);
     QTimer* timer;
     int timerInterval;
-    QString ringtoneName;
 
 private slots:
     void start();

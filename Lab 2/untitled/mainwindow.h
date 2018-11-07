@@ -47,8 +47,8 @@ private slots:
     void updateTime();
     void newTimerSetup();
     void newAlarmSetup();
-    void addTimerToList(int, QString, bool);
-    void addAlarmToList(int, QString, bool);
+    void addTimerToList(int, QString, bool, QString);
+    void addAlarmToList(int, QString, bool, QString);
     void timerDeletion(int);
     void alarmDeletion(int);
     void alarm(QString, QString);
@@ -56,6 +56,8 @@ private slots:
     void switchMute();
     void startGroup();
     void stopGroup();
+    void filterAlarm();
+    void disableFilterAlarm();
 
 };
 

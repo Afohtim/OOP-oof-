@@ -32,6 +32,11 @@ AlarmWidget::~AlarmWidget()
     delete ui;
 }
 
+void AlarmWidget::setGroup(QString newGroup)
+{
+    ui->groupEdit->document()->setPlainText(newGroup);
+}
+
 void AlarmWidget::displayTime()
 {
     group = ui->groupEdit->toPlainText();
@@ -73,5 +78,7 @@ void AlarmWidget::alarmAndStop()
 void AlarmWidget::closeWindow()
 {
     emit destruction(id);
+    if(active)
+        changeMode();
     this->close();
 }

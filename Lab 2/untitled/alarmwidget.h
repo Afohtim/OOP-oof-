@@ -22,12 +22,14 @@ public:
     bool active;
     QString alarmName;
     int ms;
+    QString ringtoneName;
+
+    void setGroup(QString);
 
 private:
     Ui::AlarmWidget *ui;
     QTime* alarmTime;
     QTimer* alarmTimer;
-    QString ringtoneName;
 
 private slots:
     void start();
