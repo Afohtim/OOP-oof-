@@ -3,7 +3,14 @@
 
 #include <QListWidget>
 #include <QVBoxLayout>
+#include <QString>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+
+using std::ifstream;
+using std::ofstream;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -34,6 +41,29 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->startGroupButton, SIGNAL(clicked()), this, SLOT(startGroup()));
     connect(ui->stopGroupButton, SIGNAL(clicked()), this, SLOT(stopGroup()));
 
+
+    ifstream fin("config.txt");
+    std::string s;
+    while(std::getline(fin, s))
+    {
+        std::stringstream stringin(s);
+        std::string type, name;
+        int ms;
+        stringin >> type >> name >> ms;
+        if(type == "alarm")
+        {
+            int isOn;
+            stringin >> isOn;
+            addAlarmToList(ms, QString::fromStdString(name), isOn);
+
+        }
+        else if (type == "timer")
+        {
+            addTimerToList(ms, QString::fromStdString(name), false);
+        }
+    }
+
+
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
     timer->start();
@@ -41,7 +71,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    ofstream fout("config.txt");
+    for(auto timer : timerWidgets)
+    {
+        fout << "timer" << ' ' << timer->timerName.toStdString() << ' ' << timer->ms << '\n';
+    }
+
+    for(auto alarm : alarmWidgets)
+    {
+        fout << "alarm" << ' ' << alarm->alarmName.toStdString() << ' ' << alarm->ms << ' ' << alarm->active << '\n';
+    }
 }
 
 void MainWindow::updateTime()

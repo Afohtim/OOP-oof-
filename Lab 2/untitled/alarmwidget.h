@@ -20,12 +20,13 @@ public:
     QString group;
     int id;
     bool active;
+    QString alarmName;
+    int ms;
 
 private:
     Ui::AlarmWidget *ui;
     QTime* alarmTime;
     QTimer* alarmTimer;
-    QString alarmName;
     QString ringtoneName;
 
 private slots:

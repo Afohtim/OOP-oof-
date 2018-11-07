@@ -9,6 +9,7 @@ AlarmWidget::AlarmWidget(QTime alarm_time, QString name, QString ringtone_name, 
 
     ui->nameLabel->setText(name);
     alarmTimer = new QTimer(this);
+    ms = alarm_time.msecsSinceStartOfDay();
     alarmTime = new QTime(alarm_time.hour(), alarm_time.minute(), alarm_time.second());
     alarmName = name;
     ringtoneName = ringtone_name;

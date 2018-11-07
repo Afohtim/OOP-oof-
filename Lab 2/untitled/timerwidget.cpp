@@ -9,6 +9,7 @@ TimerWidget::TimerWidget(int interval, QString name, QString ringtone_name, QWid
 
     timer = new QTimer(this);
 
+    ms = interval;
     timerInterval = interval;
     timerName = name;
     ringtoneName = ringtone_name;
@@ -19,6 +20,7 @@ TimerWidget::TimerWidget(int interval, QString name, QString ringtone_name, QWid
     connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(closeWindow()));
     connect(ui->changeModeButton, SIGNAL(clicked()), this, SLOT(changeMode()));
     connect(timer, SIGNAL(timeout()), this, SLOT(alarmAndStop()));
+
 
     QTimer* refreshTimer = new QTimer(this);
     connect(refreshTimer, SIGNAL(timeout()), this, SLOT(displayTime()));

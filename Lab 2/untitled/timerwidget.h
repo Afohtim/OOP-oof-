@@ -20,13 +20,14 @@ public:
     QString group;
     int id;
     bool active;
+    QString timerName;
+    int ms;
 
 private:
     Ui::TimerWidget *ui;
     QString msToStringTime(int ms);
     QTimer* timer;
     int timerInterval;
-    QString timerName;
     QString ringtoneName;
 
 private slots:
