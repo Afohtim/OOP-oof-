@@ -14,7 +14,7 @@ class NotificationWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit NotificationWindow(QString message, QWidget *parent = nullptr);
+    explicit NotificationWindow(QString message, bool muted, QString ringtoneName, QWidget *parent = nullptr);
     ~NotificationWindow();
 
 private:

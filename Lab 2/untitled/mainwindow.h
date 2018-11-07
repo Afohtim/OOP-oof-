@@ -37,18 +37,20 @@ private:
     int scrollTimerWidgetSize = 0;
     int scrollAlarmWidgetSize = 0;
     int subwidgetSize;
+    bool isMuted;
 
 
 private slots:
     void updateTime();
     void newTimerSetup();
     void newAlarmSetup();
-    void addTimerToList(int);
-    void addAlarmToList(int);
+    void addTimerToList(int, QString, bool);
+    void addAlarmToList(int, QString, bool);
     void timerDeletion();
     void alarmDeletion();
-    void alarm(QString);
-    void timerAlarm(QString);
+    void alarm(QString, QString);
+    void timerAlarm(QString, QString);
+    void switchMute();
 
 
 };

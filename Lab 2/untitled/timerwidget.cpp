@@ -1,7 +1,7 @@
 #include "timerwidget.h"
 #include "ui_timerwidget.h"
 
-TimerWidget::TimerWidget(int interval, QString name, QWidget *parent) :
+TimerWidget::TimerWidget(int interval, QString name, QString ringtone_name, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::TimerWidget)
 {
@@ -11,6 +11,7 @@ TimerWidget::TimerWidget(int interval, QString name, QWidget *parent) :
 
     timerInterval = interval;
     timerName = name;
+    ringtoneName = ringtone_name;
     active = false;
 
     ui->nameLabel->setText(timerName);
@@ -71,8 +72,7 @@ void TimerWidget::displayTime()
 
 void TimerWidget::alarmAndStop()
 {
-    //Beep Beep Alarm not ready
-    emit alarm(timerName);
+    emit alarm(timerName, ringtoneName);
     changeMode();
 }
 

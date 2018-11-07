@@ -1,6 +1,7 @@
 #ifndef NEWALARMWINDOW_H
 #define NEWALARMWINDOW_H
 
+#include "ringtonedialog.h"
 #include <QDialog>
 
 namespace Ui {
@@ -17,10 +18,13 @@ public:
 
 private:
     Ui::NewAlarmWindow *ui;
+    QString ringtoneName;
 private slots:
     void sendInfoAndClose();
+    void openRingtones();
+    void setRingtone(QString);
 signals:
-    void sendAlarmInfo(int);
+    void sendAlarmInfo(int, QString, bool);
 
 };
 

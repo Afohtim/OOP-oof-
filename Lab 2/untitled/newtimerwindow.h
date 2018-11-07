@@ -1,6 +1,8 @@
 #ifndef NEWTIMERWINDOW_H
 #define NEWTIMERWINDOW_H
 
+
+#include "ringtonedialog.h"
 #include <QDialog>
 
 namespace Ui {
@@ -17,10 +19,13 @@ public:
 
 private:
     Ui::NewTimerDialog *ui;
+    QString ringtoneName;
 private slots:
     void sendInfoAndClose();
+    void openRingtones();
+    void setRingtone(QString);
 signals:
-    void sendTimerInfo(int);
+    void sendTimerInfo(int, QString, bool);
 
 };
 

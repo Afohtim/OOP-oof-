@@ -14,7 +14,7 @@ class TimerWidget : public QDialog
     Q_OBJECT
 
 public:
-    explicit TimerWidget(int inetrval, QString name, QWidget *parent = nullptr);
+    explicit TimerWidget(int inetrval, QString name, QString ringtone_name, QWidget *parent = nullptr);
     ~TimerWidget();
 
 private:
@@ -23,19 +23,21 @@ private:
     QTimer* timer;
     int timerInterval;
     QString timerName;
+    QString ringtoneName;
     bool active;
 
 private slots:
     void start();
-    void changeMode();
 
     void displayTime();
     void alarmAndStop();
-
     void closeWindow();
 
+public slots:
+    void changeMode();
+
 signals:
-    void alarm(QString);
+    void alarm(QString, QString);
     void destruction();
 
 };

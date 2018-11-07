@@ -1,7 +1,7 @@
 #include "alarmwidget.h"
 #include "ui_alarmwidget.h"
 
-AlarmWidget::AlarmWidget(QTime alarm_time, QString name, QWidget *parent):
+AlarmWidget::AlarmWidget(QTime alarm_time, QString name, QString ringtone_name, QWidget *parent):
     QDialog(parent),
     ui(new Ui::AlarmWidget)
 {
@@ -11,6 +11,7 @@ AlarmWidget::AlarmWidget(QTime alarm_time, QString name, QWidget *parent):
     alarmTimer = new QTimer(this);
     alarmTime = new QTime(alarm_time.hour(), alarm_time.minute(), alarm_time.second());
     alarmName = name;
+    ringtoneName = ringtone_name;
     active = false;
     ui->timeLabel->setText(alarmTime->toString("hh:mm AP"));
 
@@ -56,7 +57,7 @@ void AlarmWidget::changeMode()
 
 void AlarmWidget::alarmAndStop()
 {
-    emit alarm(alarmName);
+    emit alarm(alarmName, ringtoneName);
     changeMode();
 }
 

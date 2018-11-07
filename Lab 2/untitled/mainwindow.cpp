@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     subwidgetSize = 115;
+    isMuted = false;
 
     timerScrollWidget = new QWidget;
     timerScrollWidget->setLayout(new QVBoxLayout(this));
@@ -26,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->closeButton, SIGNAL(clicked()), qApp, SLOT(quit()));
     connect(ui->newTimerButton, SIGNAL(clicked()), this, SLOT(newTimerSetup()));
     connect(ui->newAlarmButton, SIGNAL(clicked()), this, SLOT(newAlarmSetup()));
+    connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(switchMute()));
 
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
@@ -45,40 +47,51 @@ void MainWindow::updateTime()
 void MainWindow::newTimerSetup()
 {
     auto timerSetupWindow = new NewTimerDialog(this);
-    connect(timerSetupWindow, SIGNAL(sendTimerInfo(int)), this, SLOT(addTimerToList(int)));
+    connect(timerSetupWindow, SIGNAL(sendTimerInfo(int, QString, bool)), this, SLOT(addTimerToList(int, QString, bool)));
     timerSetupWindow->exec();
 }
 
 void MainWindow::newAlarmSetup()
 {
     auto alarmSetupWindow = new NewAlarmWindow(this);
-    connect(alarmSetupWindow, SIGNAL(sendAlarmInfo(int)), this, SLOT(addAlarmToList(int)));
+    connect(alarmSetupWindow, SIGNAL(sendAlarmInfo(int, QString, bool)), this, SLOT(addAlarmToList(int, QString, bool)));
     alarmSetupWindow->exec();
 }
 
-void MainWindow::addTimerToList(int timeLeft)
+void MainWindow::addTimerToList(int timeLeft, QString ringName, bool startNow)
 {
-    auto timerWidget = new TimerWidget(timeLeft, QString("timer"), this);
+    auto timerWidget = new TimerWidget(timeLeft, QString("timer"), ringName, this);
+    if(startNow)
+    {
+        timerWidget->changeMode();
+    }
+
     scrollTimerWidgetSize += subwidgetSize;
     timerScrollWidget->setMinimumHeight(scrollTimerWidgetSize);
     timerScrollWidget->layout()->addWidget(timerWidget);
     connect(timerWidget, SIGNAL(destruction()), this, SLOT(timerDeletion()));
-    connect(timerWidget, SIGNAL(alarm(QString)), this, SLOT(timerAlarm(QString)));
+    connect(timerWidget, SIGNAL(alarm(QString, QString)), this, SLOT(timerAlarm(QString, QString)));
 
 }
 
-void MainWindow::addAlarmToList(int alarmTime)
+void MainWindow::addAlarmToList(int alarmTime, QString ringName, bool startNow)
 {
     int hours = alarmTime/1000/3600;
     int minutes = alarmTime/1000/60 - hours * 60;
     int seconds = alarmTime/1000 - hours * 3600 - minutes * 60;
     QTime alarm_time = QTime(hours, minutes, seconds);
-    auto alarmWidget = new AlarmWidget(alarm_time, QString("alarm"), this);
+    auto alarmWidget = new AlarmWidget(alarm_time, QString("alarm"), ringName, this);
+    if(startNow)
+    {
+        alarmWidget->changeMode();
+        system("pause");
+    }
+
     scrollAlarmWidgetSize += subwidgetSize;
     alarmScrollWidget->setMinimumHeight(scrollAlarmWidgetSize);
     alarmScrollWidget->layout()->addWidget(alarmWidget);
     connect(alarmWidget, SIGNAL(destruction()), this, SLOT(alarmDeletion()));
-    connect(alarmWidget, SIGNAL(alarm(QString)), this, SLOT(alarm(QString)));
+    connect(alarmWidget, SIGNAL(alarm(QString, QString)), this, SLOT(alarm(QString, QString)));
 }
 
 QString MainWindow::msToStringTime(int ms)
@@ -101,15 +114,32 @@ void MainWindow::alarmDeletion()
     alarmScrollWidget->setMinimumHeight(scrollAlarmWidgetSize);
 }
 
-void MainWindow::timerAlarm(QString message)
+void MainWindow::timerAlarm(QString message, QString ringtoneName)
 {
-    auto wind = new NotificationWindow(message, this);
+    auto wind = new NotificationWindow(message, isMuted, ringtoneName, this);
     wind->exec();
 }
 
-void MainWindow::alarm(QString message)
+void MainWindow::alarm(QString message, QString ringtoneName)
 {
-    auto wind = new NotificationWindow(message + "\n" +QTime::currentTime().toString("hh:mm AP"), this);
+    auto wind = new NotificationWindow(message + "\n" +QTime::currentTime().toString("hh:mm AP"), isMuted, ringtoneName, this);
     wind->exec();
+}
+
+void MainWindow::switchMute()
+{
+    if(isMuted)
+    {
+        ui->muteButton->setText("Mute");
+        isMuted = false;
+    }
+    else
+    {
+        ui->muteButton->setText("Unmute");
+        isMuted = true;
+    }
+
+
+
 }
 

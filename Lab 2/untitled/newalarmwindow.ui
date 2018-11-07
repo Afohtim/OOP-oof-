@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>253</width>
+    <width>300</width>
     <height>164</height>
    </rect>
   </property>
@@ -21,8 +21,8 @@
   <widget class="QPushButton" name="cancelButton">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>120</y>
+     <x>12</x>
+     <y>130</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -34,8 +34,8 @@
   <widget class="QPushButton" name="confirmButton">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>120</y>
+     <x>162</x>
+     <y>130</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -63,6 +63,32 @@
    </property>
    <property name="displayFormat">
     <string>hh:mm AP</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ringtoneButton">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>60</y>
+     <width>91</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Choose ringtone</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="startBox">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>30</y>
+     <width>70</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Start now</string>
    </property>
   </widget>
  </widget>

@@ -32,7 +32,8 @@ SOURCES += \
     timerwidget.cpp \
     alarmwidget.cpp \
     newalarmwindow.cpp \
-    notificationwindow.cpp
+    notificationwindow.cpp \
+    ringtonedialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +41,8 @@ HEADERS += \
     timerwidget.h \
     alarmwidget.h \
     newalarmwindow.h \
-    notificationwindow.h
+    notificationwindow.h \
+    ringtonedialog.h
 
 FORMS += \
         mainwindow.ui \
@@ -48,7 +50,8 @@ FORMS += \
     timerwidget.ui \
     alarmwidget.ui \
     newalarmwindow.ui \
-    notificationwindow.ui
+    notificationwindow.ui \
+    ringtonedialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
