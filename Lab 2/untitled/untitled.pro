@@ -28,17 +28,23 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     newtimerwindow.cpp \
-    timerwidget.cpp
+    timerwidget.cpp \
+    alarmwidget.cpp \
+    newalarmwindow.cpp
 
 HEADERS += \
         mainwindow.h \
     newtimerwindow.h \
-    timerwidget.h
+    timerwidget.h \
+    alarmwidget.h \
+    newalarmwindow.h
 
 FORMS += \
         mainwindow.ui \
     newtimerwindow.ui \
-    timerwidget.ui
+    timerwidget.ui \
+    alarmwidget.ui \
+    newalarmwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

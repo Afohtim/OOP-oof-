@@ -6,6 +6,7 @@ TimerWidget::TimerWidget(int interval, QString name, QWidget *parent) :
     ui(new Ui::TimerWidget)
 {
     ui->setupUi(this);
+
     timer = new QTimer(this);
 
     timerInterval = interval;
@@ -14,7 +15,7 @@ TimerWidget::TimerWidget(int interval, QString name, QWidget *parent) :
 
     ui->nameLabel->setText(timerName);
 
-    connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(closeWindow()));
     connect(ui->changeModeButton, SIGNAL(clicked()), this, SLOT(changeMode()));
     connect(timer, SIGNAL(timeout()), this, SLOT(alarmAndStop()));
 
@@ -71,10 +72,12 @@ void TimerWidget::displayTime()
 void TimerWidget::alarmAndStop()
 {
     //Beep Beep Alarm not ready
+    emit alarm();
     changeMode();
 }
 
-/*void TimerWidget::
+void TimerWidget::closeWindow()
 {
-
-}*/
+    emit destruction();
+    this->close();
+}

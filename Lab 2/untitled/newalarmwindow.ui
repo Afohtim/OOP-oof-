@@ -1,36 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>NewTimerDialog</class>
- <widget class="QDialog" name="NewTimerDialog">
+ <class>NewAlarmWindow</class>
+ <widget class="QDialog" name="NewAlarmWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>252</width>
-    <height>219</height>
+    <width>253</width>
+    <height>164</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <kerning>true</kerning>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QPushButton" name="confirmButton">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>170</y>
-     <width>75</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>OK</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="cancelButton">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>170</y>
+     <x>10</x>
+     <y>120</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -39,12 +31,25 @@
     <string>Close</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="confirmButton">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>120</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>OK</string>
+   </property>
+  </widget>
   <widget class="QTimeEdit" name="timeSet">
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>50</y>
-     <width>121</width>
+     <y>20</y>
+     <width>131</width>
      <height>81</height>
     </rect>
    </property>
@@ -57,7 +62,7 @@
     <enum>QAbstractSpinBox::NoButtons</enum>
    </property>
    <property name="displayFormat">
-    <string>hh:mm:ss</string>
+    <string>hh:mm AP</string>
    </property>
   </widget>
  </widget>

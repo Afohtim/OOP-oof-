@@ -3,6 +3,8 @@
 
 #include "newtimerwindow.h"
 #include "timerwidget.h"
+#include "alarmwidget.h"
+#include "newalarmwindow.h"
 
 #include <vector>
 #include <QMainWindow>
@@ -29,15 +31,21 @@ private:
     Ui::MainWindow *ui;
     vector<QTimer*> timers;
     QWidget* timerScrollWidget;
+    QWidget* alarmScrollWidget;
     QString msToStringTime(int);
-    int scrollWidgetSize = 0;
-    int timerWidgetSize;
+    int scrollTimerWidgetSize = 0;
+    int scrollAlarmWidgetSize = 0;
+    int subwidgetSize;
 
 
 private slots:
     void updateTime();
     void newTimerSetup();
+    void newAlarmSetup();
     void addTimerToList(int);
+    void addAlarmToList(int);
+    void timerDeletion();
+    void alarmDeletion();
 
 
 };

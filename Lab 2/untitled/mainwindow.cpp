@@ -10,15 +10,22 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    timerWidgetSize = 115;
+    subwidgetSize = 115;
+
     timerScrollWidget = new QWidget;
     timerScrollWidget->setLayout(new QVBoxLayout(this));
     timerScrollWidget->setMinimumHeight(200);
     ui->timerWidgets->setWidget(timerScrollWidget);
 
+    alarmScrollWidget = new QWidget;
+    alarmScrollWidget->setLayout(new QVBoxLayout(this));
+    alarmScrollWidget->setMinimumHeight(200);
+    ui->alarmWidgets->setWidget(alarmScrollWidget);
+
     ui->closeButton->setText("Close");
     connect(ui->closeButton, SIGNAL(clicked()), qApp, SLOT(quit()));
     connect(ui->newTimerButton, SIGNAL(clicked()), this, SLOT(newTimerSetup()));
+    connect(ui->newAlarmButton, SIGNAL(clicked()), this, SLOT(newAlarmSetup()));
 
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
@@ -42,13 +49,34 @@ void MainWindow::newTimerSetup()
     timerSetupWindow->exec();
 }
 
+void MainWindow::newAlarmSetup()
+{
+    auto alarmSetupWindow = new NewAlarmWindow(this);
+    connect(alarmSetupWindow, SIGNAL(sendAlarmInfo(int)), this, SLOT(addAlarmToList(int)));
+    alarmSetupWindow->exec();
+}
+
 void MainWindow::addTimerToList(int timeLeft)
 {
-    QString time = msToStringTime(timeLeft);
     auto timerWidget = new TimerWidget(timeLeft, QString("timer"), this);
-    scrollWidgetSize += timerWidgetSize;
-    timerScrollWidget->setMinimumHeight(scrollWidgetSize);
+    scrollTimerWidgetSize += subwidgetSize;
+    timerScrollWidget->setMinimumHeight(scrollTimerWidgetSize);
     timerScrollWidget->layout()->addWidget(timerWidget);
+    connect(timerWidget, SIGNAL(destruction()), this, SLOT(timerDeletion()));
+
+}
+
+void MainWindow::addAlarmToList(int alarmTime)
+{
+    int hours = alarmTime/1000/3600;
+    int minutes = alarmTime/1000/60 - hours * 60;
+    int seconds = alarmTime/1000 - hours * 3600 - minutes * 60;
+    QTime alarm_time = QTime(hours, minutes, seconds);
+    auto alarmWidget = new AlarmWidget(alarm_time, QString("alarm"), this);
+    scrollAlarmWidgetSize += subwidgetSize;
+    alarmScrollWidget->setMinimumHeight(scrollAlarmWidgetSize);
+    alarmScrollWidget->layout()->addWidget(alarmWidget);
+    connect(alarmWidget, SIGNAL(destruction()), this, SLOT(alarmDeletion()));
 }
 
 QString MainWindow::msToStringTime(int ms)
@@ -57,4 +85,16 @@ QString MainWindow::msToStringTime(int ms)
     int minutes = ms/1000/60 - hours * 60;
     int seconds = ms/1000 - hours * 3600 - minutes * 60;
     return QTime(hours, minutes, seconds).toString("hh:mm:ss");
+}
+
+void MainWindow::timerDeletion()
+{
+    scrollTimerWidgetSize -= subwidgetSize;
+    timerScrollWidget->setMinimumHeight(scrollTimerWidgetSize);
+}
+
+void MainWindow::alarmDeletion()
+{
+    scrollAlarmWidgetSize -= subwidgetSize;
+    alarmScrollWidget->setMinimumHeight(scrollAlarmWidgetSize);
 }

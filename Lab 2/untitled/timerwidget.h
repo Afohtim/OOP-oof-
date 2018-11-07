@@ -32,6 +32,12 @@ private slots:
     void displayTime();
     void alarmAndStop();
 
+    void closeWindow();
+
+signals:
+    void alarm();
+    void destruction();
+
 };
 
 #endif // TIMER_H
