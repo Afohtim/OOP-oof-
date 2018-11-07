@@ -3,6 +3,7 @@
 
 #include <QListWidget>
 #include <QVBoxLayout>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -10,8 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    subwidgetSize = 115;
+    subwidgetSize = 155;
     isMuted = false;
+
+    nextAlarmId = nextTimerId = 0;
 
     timerScrollWidget = new QWidget;
     timerScrollWidget->setLayout(new QVBoxLayout(this));
@@ -28,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->newTimerButton, SIGNAL(clicked()), this, SLOT(newTimerSetup()));
     connect(ui->newAlarmButton, SIGNAL(clicked()), this, SLOT(newAlarmSetup()));
     connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(switchMute()));
+    connect(ui->startGroupButton, SIGNAL(clicked()), this, SLOT(startGroup()));
+    connect(ui->stopGroupButton, SIGNAL(clicked()), this, SLOT(stopGroup()));
 
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
@@ -42,6 +47,8 @@ MainWindow::~MainWindow()
 void MainWindow::updateTime()
 {
     ui->label->setText(QTime::currentTime().toString("hh:mm:ss AP"));
+    alarmScrollWidget->setMinimumHeight(currentAlarms * subwidgetSize);
+    timerScrollWidget->setMinimumHeight(currentTimers * subwidgetSize);
 }
 
 void MainWindow::newTimerSetup()
@@ -61,15 +68,15 @@ void MainWindow::newAlarmSetup()
 void MainWindow::addTimerToList(int timeLeft, QString ringName, bool startNow)
 {
     auto timerWidget = new TimerWidget(timeLeft, QString("timer"), ringName, this);
+    timerWidget->id = nextTimerId++;
+    currentTimers++;
     if(startNow)
     {
         timerWidget->changeMode();
     }
-
-    scrollTimerWidgetSize += subwidgetSize;
-    timerScrollWidget->setMinimumHeight(scrollTimerWidgetSize);
     timerScrollWidget->layout()->addWidget(timerWidget);
-    connect(timerWidget, SIGNAL(destruction()), this, SLOT(timerDeletion()));
+    timerWidgets.push_back(timerWidget);
+    connect(timerWidget, SIGNAL(destruction(int)), this, SLOT(timerDeletion(int)));
     connect(timerWidget, SIGNAL(alarm(QString, QString)), this, SLOT(timerAlarm(QString, QString)));
 
 }
@@ -81,16 +88,16 @@ void MainWindow::addAlarmToList(int alarmTime, QString ringName, bool startNow)
     int seconds = alarmTime/1000 - hours * 3600 - minutes * 60;
     QTime alarm_time = QTime(hours, minutes, seconds);
     auto alarmWidget = new AlarmWidget(alarm_time, QString("alarm"), ringName, this);
+    alarmWidget->id = nextAlarmId++;
+    currentAlarms++;
     if(startNow)
     {
         alarmWidget->changeMode();
-        system("pause");
     }
 
-    scrollAlarmWidgetSize += subwidgetSize;
-    alarmScrollWidget->setMinimumHeight(scrollAlarmWidgetSize);
     alarmScrollWidget->layout()->addWidget(alarmWidget);
-    connect(alarmWidget, SIGNAL(destruction()), this, SLOT(alarmDeletion()));
+    alarmWidgets.push_back(alarmWidget);
+    connect(alarmWidget, SIGNAL(destruction(int)), this, SLOT(alarmDeletion(int)));
     connect(alarmWidget, SIGNAL(alarm(QString, QString)), this, SLOT(alarm(QString, QString)));
 }
 
@@ -102,16 +109,31 @@ QString MainWindow::msToStringTime(int ms)
     return QTime(hours, minutes, seconds).toString("hh:mm:ss");
 }
 
-void MainWindow::timerDeletion()
+void MainWindow::timerDeletion(int id)
 {
-    scrollTimerWidgetSize -= subwidgetSize;
-    timerScrollWidget->setMinimumHeight(scrollTimerWidgetSize);
+
+    for(unsigned i = 0; i < timerWidgets.size(); ++i)
+    {
+        if(timerWidgets[i]->id == id)
+        {
+            timerWidgets.erase(timerWidgets.begin() + i);
+            break;
+        }
+    }
+    currentTimers--;
 }
 
-void MainWindow::alarmDeletion()
+void MainWindow::alarmDeletion(int id)
 {
-    scrollAlarmWidgetSize -= subwidgetSize;
-    alarmScrollWidget->setMinimumHeight(scrollAlarmWidgetSize);
+    for(unsigned i = 0; i < alarmWidgets.size(); ++i)
+    {
+        if(alarmWidgets[i]->id == id)
+        {
+            alarmWidgets.erase(alarmWidgets.begin() + i);
+            break;
+        }
+    }
+    currentAlarms--;
 }
 
 void MainWindow::timerAlarm(QString message, QString ringtoneName)
@@ -141,5 +163,56 @@ void MainWindow::switchMute()
 
 
 
+}
+
+void MainWindow::startGroup()
+{
+    for(auto timer : timerWidgets)
+    {
+        if(timer->group == ui->groupEdit->toPlainText())
+        {
+            if(!timer->active)
+            {
+                timer->changeMode();
+            }
+        }
+    }
+
+    for(auto alarm : alarmWidgets)
+    {
+        if(alarm->group == ui->groupEdit->toPlainText())
+        {
+            if(!alarm->active)
+            {
+                alarm->changeMode();
+            }
+        }
+    }
+}
+
+void MainWindow::stopGroup()
+{
+    for(auto timer : timerWidgets)
+    {
+        std::cout << timer->group.toStdString() << ' ' << ui->groupEdit->toPlainText().toStdString() << '\n';
+        if(timer->group == ui->groupEdit->toPlainText())
+        {
+            if(timer->active)
+            {
+                timer->changeMode();
+            }
+        }
+    }
+
+    for(auto alarm : alarmWidgets)
+    {
+        if(alarm->group == ui->groupEdit->toPlainText())
+        {
+            if(alarm->active)
+            {
+                alarm->changeMode();
+            }
+        }
+    }
 }
 

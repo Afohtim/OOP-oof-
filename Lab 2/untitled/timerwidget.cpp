@@ -68,6 +68,7 @@ void TimerWidget::displayTime()
         dispayedTime = timer->remainingTime();
     }
     ui->timeLabel->setText(msToStringTime(dispayedTime));
+    group = ui->groupEdit->toPlainText();
 }
 
 void TimerWidget::alarmAndStop()
@@ -78,6 +79,6 @@ void TimerWidget::alarmAndStop()
 
 void TimerWidget::closeWindow()
 {
-    emit destruction();
+    emit destruction(id);
     this->close();
 }

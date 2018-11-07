@@ -17,6 +17,10 @@ public:
     explicit TimerWidget(int inetrval, QString name, QString ringtone_name, QWidget *parent = nullptr);
     ~TimerWidget();
 
+    QString group;
+    int id;
+    bool active;
+
 private:
     Ui::TimerWidget *ui;
     QString msToStringTime(int ms);
@@ -24,7 +28,6 @@ private:
     int timerInterval;
     QString timerName;
     QString ringtoneName;
-    bool active;
 
 private slots:
     void start();
@@ -38,7 +41,7 @@ public slots:
 
 signals:
     void alarm(QString, QString);
-    void destruction();
+    void destruction(int);
 
 };
 

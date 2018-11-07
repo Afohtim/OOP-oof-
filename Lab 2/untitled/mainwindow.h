@@ -11,7 +11,6 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <QTime>
-//#include <QString>
 
 using std::vector;
 
@@ -34,10 +33,14 @@ private:
     QWidget* timerScrollWidget;
     QWidget* alarmScrollWidget;
     QString msToStringTime(int);
-    int scrollTimerWidgetSize = 0;
-    int scrollAlarmWidgetSize = 0;
     int subwidgetSize;
     bool isMuted;
+    vector<TimerWidget*> timerWidgets;
+    int nextTimerId;
+    vector<AlarmWidget*> alarmWidgets;
+    int nextAlarmId;
+    int currentTimers = 0;
+    int currentAlarms = 0;
 
 
 private slots:
@@ -46,12 +49,13 @@ private slots:
     void newAlarmSetup();
     void addTimerToList(int, QString, bool);
     void addAlarmToList(int, QString, bool);
-    void timerDeletion();
-    void alarmDeletion();
+    void timerDeletion(int);
+    void alarmDeletion(int);
     void alarm(QString, QString);
     void timerAlarm(QString, QString);
     void switchMute();
-
+    void startGroup();
+    void stopGroup();
 
 };
 

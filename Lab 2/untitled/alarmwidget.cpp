@@ -19,14 +19,22 @@ AlarmWidget::AlarmWidget(QTime alarm_time, QString name, QString ringtone_name, 
     connect(ui->changeModeButton, SIGNAL(clicked()), this, SLOT(changeMode()));
     connect(alarmTimer, SIGNAL(timeout()), this, SLOT(alarmAndStop()));
 
+    QTimer* refreshTimer = new QTimer(this);
+    connect(refreshTimer, SIGNAL(timeout()), this, SLOT(displayTime()));
+    refreshTimer->start();
+
 }
 
 AlarmWidget::~AlarmWidget()
 {
-    emit destruction();
+    emit destruction(id);
     delete ui;
 }
 
+void AlarmWidget::displayTime()
+{
+    group = ui->groupEdit->toPlainText();
+}
 
 void AlarmWidget::start()
 {
@@ -63,6 +71,6 @@ void AlarmWidget::alarmAndStop()
 
 void AlarmWidget::closeWindow()
 {
-    emit destruction();
+    emit destruction(id);
     this->close();
 }

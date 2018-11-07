@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>809</width>
-    <height>365</height>
+    <height>491</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -123,6 +123,55 @@
     </property>
     <property name="text">
      <string>Mute</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="startGroupButton">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>350</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start all from group</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="groupEdit">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>300</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>119</x>
+      <y>280</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Group</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stopGroupButton">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>380</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop all from group</string>
     </property>
    </widget>
   </widget>

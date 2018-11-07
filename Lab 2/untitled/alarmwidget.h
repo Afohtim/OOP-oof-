@@ -17,13 +17,16 @@ public:
     explicit AlarmWidget(QTime inetrval, QString name, QString ringtone_name, QWidget *parent = nullptr);
     ~AlarmWidget();
 
+    QString group;
+    int id;
+    bool active;
+
 private:
     Ui::AlarmWidget *ui;
     QTime* alarmTime;
     QTimer* alarmTimer;
     QString alarmName;
     QString ringtoneName;
-    bool active;
 
 private slots:
     void start();
@@ -33,11 +36,12 @@ private slots:
 
 public slots:
     void changeMode();
+    void displayTime();
 
 
 signals:
     void alarm(QString, QString);
-    void destruction();
+    void destruction(int);
 };
 
 #endif // ALARMWIDGET_H
