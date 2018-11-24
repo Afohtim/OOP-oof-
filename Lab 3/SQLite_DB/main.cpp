@@ -3,19 +3,28 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <sstream>
+
 
 using namespace std;
+string response("");
 
-
+bool empty(ifstream& pFile)
+{
+	return pFile.peek() == ifstream::traits_type::eof();
+}
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
-	int i;
-	printf("{\n");
-	for (i = 0; i<argc; i++)
+
+	response += "{";
+	for (int i = 0; i<argc; i++)
 	{
-		printf("'%s': '%s'%s\n", azColName[i], argv[i] ? argv[i] : "NULL", i != argc - 1 ? "," : "");
+		char str[10000];
+		sprintf(str, "'%s': '%s'%s ", azColName[i], argv[i] ? argv[i] : "NULL", i != argc - 1 ? "," : "");
+		response += str;
 	}
-	printf("}\n");
+	response += "}\n";
 	return 0;
 }
 
@@ -23,12 +32,12 @@ void check_request(string request_type, int rc, char* zErrMsg)
 {
 	if (rc != SQLITE_OK)
 	{
-		fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		response += "{'ok': false, 'error': '" + string(zErrMsg) + "'}\n";
 		sqlite3_free(zErrMsg);
 	}
 	else
 	{
-		cout << request_type << ": OK\n";
+		response += "{'ok': true}\n";
 	}
 }
 
@@ -45,7 +54,7 @@ void create_all_tables(sqlite3* db)
 	char* sql = "CREATE TABLE tg_osu_id("  \
 		"tg_id INT NOT NULL," \
 		"osu_id INT NOT NULL," \
-		"PRIMARY KEY(tg_id, osu_id));";
+		"PRIMARY KEY(tg_id));";
 	exececute_sql(db, sql);
 
 	sql = "CREATE TABLE osu_users("  \
@@ -85,7 +94,7 @@ void create_all_tables(sqlite3* db)
 	exececute_sql(db, sql);
 }
 
-void add_user(sqlite3* db, char* tg_id, char* osu_id)
+void add_user(sqlite3* db, const char* tg_id, const char* osu_id)
 {
 	char sql[255];
 	sprintf(sql, "INSERT INTO tg_osu_id(tg_id, osu_id) VALUES(%s, %s);", tg_id, osu_id);
@@ -93,46 +102,52 @@ void add_user(sqlite3* db, char* tg_id, char* osu_id)
 
 }
 
-void add_user_info(sqlite3* db, char* osu_id, char* username, char* join_date, char* country)
+void add_user_info(sqlite3* db, const char* osu_id, const char* username, const char* join_date, const char* country)
 {
 	char sql[255];
-	sprintf(sql, "INSERT INTO osu_users(osu_id, username, join_date, country) VALUES(%s, %s, %s, %s);", osu_id, username, join_date, country);
+	sprintf(sql, "INSERT INTO osu_users(osu_id, 'username', 'join_date', 'country') VALUES(%s, '%s', '%s', '%s');", osu_id, username, join_date, country);
 	exececute_sql(db, sql);
 }
 
 void add_user_stats(
 	sqlite3* db,
-	char* osu_id,
-	char* update_time,
-	char* count300,
-	char* count100,
-	char* count50,
-	char* playcount,
-	char* ranked_score,
-	char* total_score,
-	char* pp_rank,
-	char* level,
-	char* pp_raw,
-	char* accuracy,
-	char* count_rank_ss,
-	char* count_rank_ssh,
-	char* count_rank_s,
-	char* count_rank_sh,
-	char* count_rank_a,
-	char* total_seconds_played,
-	char* pp_country_rank)
+	const char* osu_id,
+	const char* update_time,
+	const char* count300,
+	const char* count100,
+	const char* count50,
+	const char* playcount,
+	const char* ranked_score,
+	const char* total_score,
+	const char* pp_rank,
+	const char* level,
+	const char* pp_raw,
+	const char* accuracy,
+	const char* count_rank_ss,
+	const char* count_rank_ssh,
+	const char* count_rank_s,
+	const char* count_rank_sh,
+	const char* count_rank_a,
+	const char* total_seconds_played,
+	const char* pp_country_rank)
 {
 	char sql[10000];
 	sprintf(sql, "INSERT INTO osu_stats(osu_id, update_time, count300, count100, count50, playcount, ranked_score, total_score, pp_rank, level, pp_raw, accuracy, count_rank_ss, count_rank_ssh, count_rank_s, count_rank_sh, count_rank_a, total_seconds_played, pp_country_rank) " \
 	"VALUES(%s, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",  osu_id, update_time, count300, count100, count50, playcount, ranked_score, total_score, pp_rank, level, pp_raw, accuracy, count_rank_ss, count_rank_ssh, count_rank_s, count_rank_sh, count_rank_a, total_seconds_played, pp_country_rank);
-	printf(sql);
 	exececute_sql(db, sql);	
+}
+
+void add_to_watchlist(sqlite3* db, char* user_id, char* watched_player_id)
+{
+	char sql[255];
+	sprintf(sql, "INSERT INTO watchlist(user_osu_id, watched_player_id) VALUES(%s, %s);", user_id, watched_player_id);
+	exececute_sql(db, sql);
 }
 
 
 void select_all_users(sqlite3* db)
 {
-	char* sql = "SELECT * FROM 'tg_osu_id';";
+	char* sql = "SELECT tg_osu_id.tg_id, osu_users.* FROM osu_users INNER JOIN tg_osu_id ON (tg_osu_id.osu_id = osu_users.osu_id);";
 	exececute_sql(db, sql);
 }
 
@@ -148,11 +163,88 @@ void select_all_stats(sqlite3* db)
 	exececute_sql(db, sql);
 }
 
-void get_user_info(sqlite3* db, char* tg_id)
+void get_user_info(sqlite3* db, const char* tg_id)
 {
 	char sql[10000];
-	sprintf(sql, "SELECT osu_users.* FROM osu_users INNER JOIN tg_osu_id ON (tg_osu_id.osu_id = osu_users.osu_id AND tg_id = %s);", tg_id);
+	sprintf(sql, "SELECT tg_osu_id.tg_id, osu_users.* FROM osu_users INNER JOIN tg_osu_id ON (tg_osu_id.osu_id = osu_users.osu_id AND tg_id = %s);", tg_id);
 	exececute_sql(db, sql);
+}
+
+void get_user_stats(sqlite3* db, const char* tg_id)
+{
+	char sql[10000];
+	sprintf(sql, "SELECT osu_stats.* FROM osu_stats INNER JOIN tg_osu_id ON (tg_osu_id.osu_id = osu_stats.osu_id AND tg_id = %s);", tg_id);
+	exececute_sql(db, sql);
+}
+
+void get_watched_list(sqlite3* db, const char* tg_id)
+{
+	char sql[10000];
+	sprintf(sql, "SELECT watched_player_id FROM watchlist WHERE (user_osu_id = (SELECT osu_id FROM tg_osu_id WHERE tg_id = %s) );", tg_id);
+	exececute_sql(db, sql);
+}
+
+void execute_func(sqlite3* db, ifstream &ifstr)
+{
+	string type;
+	ifstr >> type;
+	if (type == "add_user")
+	{
+		string tg_id, osu_id, username, join_date, join_time, country;
+		ifstr >> tg_id >> osu_id >> username >> join_date >> join_time >> country;
+		join_date += " " + join_time;
+		add_user(db, tg_id.c_str(), osu_id.c_str());
+		add_user_info(db, osu_id.c_str(), username.c_str(), join_date.c_str(), country.c_str());
+	}
+	else if (type == "add_stats")
+	{
+		string osu_id,
+			update_date,
+			update_time,
+			count300,
+			count100,
+			count50,
+			playcount,
+			ranked_score,
+			total_score,
+			pp_rank,
+			level,
+			pp_raw,
+			accuracy,
+			count_rank_ss,
+			count_rank_ssh,
+			count_rank_s,
+			count_rank_sh,
+			count_rank_a,
+			total_seconds_played,
+			pp_country_rank;
+			ifstr >> osu_id >> update_date >> update_time >> count300 >> count100 >> count50 >> playcount >> ranked_score >> total_score >> pp_rank >> level >> pp_raw >> accuracy >> count_rank_ss >> count_rank_ssh >> count_rank_s >> count_rank_sh >> count_rank_a >> total_seconds_played >> pp_country_rank;
+			update_time = update_date + ' ' + update_time;
+			add_user_stats(db, osu_id.c_str(), update_time.c_str(), count300.c_str(), count100.c_str(), count50.c_str(), playcount.c_str(), ranked_score.c_str(), total_score.c_str(), pp_rank.c_str(), level.c_str(), pp_raw.c_str(), accuracy.c_str(), count_rank_ss.c_str(), count_rank_ssh.c_str(), count_rank_s.c_str(), count_rank_sh.c_str(), count_rank_a.c_str(), total_seconds_played.c_str(), pp_country_rank.c_str());
+	}
+	else if(type == "get_stats")
+	{
+		string tg_id;
+		ifstr >> tg_id;
+		get_user_stats(db, tg_id.c_str());
+	}
+	else if(type == "get_info")
+	{
+		string tg_id = "";
+		ifstr >> tg_id;
+		get_user_info(db, tg_id.c_str());
+	}
+	else if(type == "watchlist")
+	{
+		string tg_id;
+		ifstr >> tg_id;
+		get_watched_list(db, tg_id.c_str());
+	}
+	else if (type == "get_users")
+	{
+		select_all_users(db);
+	}
+
 }
 
 
@@ -173,20 +265,32 @@ int main()
 	{
 		fprintf(stderr, "Opened database successfully\n");
 	}
+	//trying to make missing tables
 	create_all_tables(db);
+	//get_user_stats(db, "12345");
+	//add_user_info(db, "1", "1", "2015-12-31 14:48:12", "US");
 
+	//system("python http_server.py");
+	cout << response << endl;
+	response = "";
+	while (true)
+	{
+		ifstream ifstr("requests.in");
 
-	add_user(db, "12345", "54321");
-	add_user_info(db, "54321", "'hjkj'", "'2015-07-29 19:05:11'", "'UA'");
-	//add_user(db, "2334", "524321");
-	//add_user(db, "12122345", "543241");
-	//add_user(db, "123345", "545321");
-	add_user_stats(db, "54321", "2015-07-29 19:05:11", "100", "100", "100", "100", "100", "100", "100", "100", "100", "100%", "100", "100", "100", "100", "100", "100", "100");
-	select_all_users(db);
-	select_all_info(db);
-	get_user_info(db, "12345");
-	get_user_info(db, "12355");
-	select_all_stats(db);
+		if (!empty(ifstr))
+		{
+			execute_func(db, ifstr);
+
+			ofstream callback("callback.out");
+			callback << response;
+			cout << response << endl;
+			response = "";
+			ofstream ofstr("requests.in");
+			ofstr.close();
+		}
+
+		ifstr.close();
+	}
 
 	sqlite3_close(db);
 	system("pause");

@@ -5,6 +5,8 @@ sqlite3.c
 sqlite3.h
 shell.c
 sqlite3ext.h
+requests.in
+callback.out
 *.db
 
 # Created by https://www.gitignore.io/api/c++,visualstudio
