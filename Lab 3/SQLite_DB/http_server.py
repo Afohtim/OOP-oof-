@@ -20,7 +20,7 @@ class DB:
         elif method == "add_stats":
             for arg in self.__add_stats_list:
                 db_file.write(arguments[arg] + ' ')
-        elif method in ["get_stats", "get_info", "watchlist"]:
+        elif method in ["get_stats", "get_info", "watchlist", "lastest_stats"]:
             db_file.write(arguments["tg_id"])
         db_file.close()
 

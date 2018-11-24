@@ -184,6 +184,13 @@ void get_watched_list(sqlite3* db, const char* tg_id)
 	exececute_sql(db, sql);
 }
 
+void get_lastest_stats(sqlite3* db, const char* tg_id)
+{
+	char sql[10000];
+	sprintf(sql, "SELECT osu_stats.* FROM osu_stats INNER JOIN tg_osu_id ON (tg_osu_id.osu_id = osu_stats.osu_id ) WHERE (tg_osu_id.tg_id = %s and osu_stats.update_time = (SELECT MAX(update_time) from osu_stats));", tg_id);
+	exececute_sql(db, sql);
+}
+
 void execute_func(sqlite3* db, ifstream &ifstr)
 {
 	string type;
@@ -243,6 +250,12 @@ void execute_func(sqlite3* db, ifstream &ifstr)
 	else if (type == "get_users")
 	{
 		select_all_users(db);
+	}
+	else if (type == "lastest_stats")
+	{
+		string tg_id;
+		ifstr >> tg_id;
+		get_lastest_stats(db, tg_id.c_str());
 	}
 
 }
