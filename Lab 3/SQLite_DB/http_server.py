@@ -22,6 +22,9 @@ class DB:
                 db_file.write(arguments[arg] + ' ')
         elif method in ["get_stats", "get_info", "watchlist", "lastest_stats"]:
             db_file.write(arguments["tg_id"])
+        elif method in ["add_to_watchlist", "rm_from_watchlist"]:
+            print("yay")
+            db_file.write(arguments["tg_id"] + ' ' + arguments["watched_id"])
         db_file.close()
 
         result = []
@@ -33,12 +36,15 @@ class DB:
         if(i >= 2):
             response["ok"] = False
             response["error"] = "Wrong method: " + method
+        else:
+            time.sleep(0.5)
         with open("callback.out", "r") as callback:
             for line in callback:
                 print(line)
-                print(type(line))
+                line = line.replace("'", "\"")
+                print(line)
                 if(line != ""):
-                    json_line = json.loads(line.replace("'", "\""))
+                    json_line = json.loads(line)
                     if("ok" in json_line):
                         if(not json_line["ok"]):
                             if(response["ok"]):
@@ -60,7 +66,12 @@ class S(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        self.wfile.write(b"123")
+        query = dict(parse.parse_qsl(parse.urlsplit(self.path).query))
+        path = parse.urlsplit(self.path).path
+
+        self.wfile.write(json.dumps(db.get_data(path[1:], query)).encode("utf-8"))
+        #self.wfile.write(b"123")
+
 
     def do_HEAD(self):
         self._set_headers()

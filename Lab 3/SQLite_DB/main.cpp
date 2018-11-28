@@ -137,12 +137,20 @@ void add_user_stats(
 	exececute_sql(db, sql);	
 }
 
-void add_to_watchlist(sqlite3* db, char* user_id, char* watched_player_id)
+void add_to_watchlist(sqlite3* db, const char* user_id, const char* watched_player_id)
 {
 	char sql[255];
-	sprintf(sql, "INSERT INTO watchlist(user_osu_id, watched_player_id) VALUES(%s, %s);", user_id, watched_player_id);
+	sprintf(sql, "INSERT INTO watchlist(user_osu_id, watched_player_id) VALUES((SELECT osu_id FROM tg_osu_id WHERE tg_id = %s), %s);", user_id, watched_player_id);
 	exececute_sql(db, sql);
 }
+
+void rm_from_watchlist(sqlite3* db, const char* user_id, const char* watched_player_id)
+{
+	char sql[255];
+	sprintf(sql, "DELETE FROM watchlist WHERE (watched_player_id = %s AND user_osu_id = (SELECT osu_id FROM tg_osu_id WHERE tg_id = %s));", watched_player_id, user_id);
+	exececute_sql(db, sql);
+}
+
 
 
 void select_all_users(sqlite3* db)
@@ -177,17 +185,26 @@ void get_user_stats(sqlite3* db, const char* tg_id)
 	exececute_sql(db, sql);
 }
 
-void get_watched_list(sqlite3* db, const char* tg_id)
+void get_watchlist(sqlite3* db, const char* tg_id)
 {
 	char sql[10000];
-	sprintf(sql, "SELECT watched_player_id FROM watchlist WHERE (user_osu_id = (SELECT osu_id FROM tg_osu_id WHERE tg_id = %s) );", tg_id);
+	sprintf(sql, "SELECT watched_player_id AS id FROM watchlist WHERE (user_osu_id = (SELECT osu_id FROM tg_osu_id WHERE tg_id = %s) );", tg_id);
 	exececute_sql(db, sql);
 }
 
 void get_lastest_stats(sqlite3* db, const char* tg_id)
 {
 	char sql[10000];
-	sprintf(sql, "SELECT osu_stats.* FROM osu_stats INNER JOIN tg_osu_id ON (tg_osu_id.osu_id = osu_stats.osu_id ) WHERE (tg_osu_id.tg_id = %s and osu_stats.update_time = (SELECT MAX(update_time) from osu_stats));", tg_id);
+	sprintf(sql, "SELECT osu_stats.* FROM osu_stats  WHERE (osu_stats.update_time = (SELECT MAX(update_time) from osu_stats INNER JOIN tg_osu_id ON (tg_osu_id.osu_id = osu_stats.osu_id) WHERE (tg_osu_id.tg_id = %s)));", tg_id);
+	exececute_sql(db, sql);
+}
+
+void get_watched(sqlite3* db)
+{
+	char sql[10000];
+	sprintf(sql, "SELECT distinct * FROM (SELECT (tg_id) as id FROM 'tg_osu_id'"\
+	"UNION " \
+	"SELECT(osu_id) as id FROM 'tg_osu_id');");
 	exececute_sql(db, sql);
 }
 
@@ -245,7 +262,20 @@ void execute_func(sqlite3* db, ifstream &ifstr)
 	{
 		string tg_id;
 		ifstr >> tg_id;
-		get_watched_list(db, tg_id.c_str());
+		get_watchlist(db, tg_id.c_str());
+	}
+	else if (type == "add_to_watchlist")
+	{
+		string tg_id, watched_id;
+		ifstr >> tg_id >> watched_id;
+		cout << tg_id << ' ' << watched_id;
+		add_to_watchlist(db, tg_id.c_str(), watched_id.c_str());
+	}
+	else if (type == "rm_from_watchlist")
+	{
+		string tg_id, watched_id;
+		ifstr >> tg_id >> watched_id;
+		rm_from_watchlist(db, tg_id.c_str(), watched_id.c_str());
 	}
 	else if (type == "get_users")
 	{
@@ -256,6 +286,10 @@ void execute_func(sqlite3* db, ifstream &ifstr)
 		string tg_id;
 		ifstr >> tg_id;
 		get_lastest_stats(db, tg_id.c_str());
+	}
+	else if (type == "")
+	{
+		get_watched(db);
 	}
 
 }
