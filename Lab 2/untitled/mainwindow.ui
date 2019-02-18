@@ -183,6 +183,9 @@
       <height>22</height>
      </rect>
     </property>
+    <property name="displayFormat">
+     <string>hh:mm AP</string>
+    </property>
    </widget>
    <widget class="QTimeEdit" name="toAlarm">
     <property name="geometry">
@@ -192,6 +195,9 @@
       <width>118</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="displayFormat">
+     <string>hh:mm AP</string>
     </property>
    </widget>
    <widget class="QPushButton" name="alarmFilterButton">

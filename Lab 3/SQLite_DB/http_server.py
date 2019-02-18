@@ -9,6 +9,8 @@ class DB:
         self.__add_stats_list = ["osu_id", "update_time", "count300", "count100", "count50", "playcount", "ranked_score", "total_score", "pp_rank", "level", "pp_raw", "accuracy", "count_rank_ss", "count_rank_ssh", "count_rank_s", "count_rank_sh", "count_rank_a", "total_seconds_played", "pp_country_rank"]
     def get_data(self, method, arguments):
         print(method, arguments)
+        if(method == ""):
+            return "Hello"
         open('callback.out', 'w').close()
 
         db_file = open("requests.in", "w")

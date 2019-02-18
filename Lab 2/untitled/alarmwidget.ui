@@ -10,6 +10,12 @@
     <height>150</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>270</width>
+    <height>150</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
@@ -66,7 +72,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>30</pointsize>
+     <pointsize>20</pointsize>
     </font>
    </property>
    <property name="text">
