@@ -9,6 +9,10 @@ requests.in
 callback.out
 *.db
 
+#Visual Paradigm
+*.vpp.*
+
+
 # Created by https://www.gitignore.io/api/c++,visualstudio
 
 ### C++ ###
