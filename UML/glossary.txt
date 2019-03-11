@@ -1,0 +1,13 @@
+Reddit - forum on internet aka "the front page of the internet".
+User - person, who uses reddit.
+Subreddit - A forum dedicated to a specific topic on the website Reddit.
+Sign up - getting an account.
+Sign in/Log in - logging in with following using of account.
+Post - Text/image/link with following voting and discussion in comments.
+Comment tree - discussoin of post or new topic dedicated to the post.
+Comment - text of user under post or another comment.
+Mod/Moderator - person who is responsible for subbredit or whole reddit (different levels).
+Rules - rules of subreddit.
+Tags - tags that save you from unexpected information such as NSFW, Spoiler, Epilepsy warning
+NSFW - Not safe for work
+Spoiler - Dumbledore dies, Luke had a father, Neo is the one etc. 
