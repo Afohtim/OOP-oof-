@@ -3,12 +3,12 @@
 #include <vector>
 #include <memory>
 
-
 using std::string;
 using std::vector;
 using std::shared_ptr;
 
 enum {Black, Red};
+
 
 struct Elem
 {
@@ -16,6 +16,7 @@ struct Elem
 	string data;
 	int key;
 };
+
 
 struct Node
 {
@@ -34,7 +35,7 @@ class Red_black_tree
 private:
 	shared_ptr<Node> root;
 	shared_ptr<Node> root_par;
-	vector<vector<string>* >* current_tree;
+	vector<vector<string> > current_tree;
 	bool updated;
 
 	void insert_balance(shared_ptr<Node>);
@@ -50,7 +51,7 @@ private:
 	void show_tree(int depth, int n, shared_ptr<Node> node);
 
 public:
-	vector<vector<string>* >* show_tree();
+	vector<vector<string> > show_tree();
 	void insert(shared_ptr<Elem> key);
 	void erase(shared_ptr<Elem> key);
 	Red_black_tree();

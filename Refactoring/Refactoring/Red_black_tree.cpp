@@ -4,22 +4,20 @@
 void Red_black_tree::show_tree(int depth, int n, shared_ptr<Node> node)
 {
 	if (node == nullptr) return;
-	if (current_tree->size() < depth + 1)
+	if (current_tree.size() < depth + 1)
 	{
-		current_tree->push_back(new vector<string>(1<<(depth)));
+		current_tree.push_back(vector<string>(1<<(depth)));
 	}
-	(*(*current_tree)[depth])[n] = (std::to_string(node->key->key) + ":" + node->key->data + ":" + std::to_string(node->color));
+	current_tree[depth][n] = (std::to_string(node->key->key) + ":" + node->key->data + ":" + std::to_string(node->color));
 	show_tree(depth + 1, 2*n,  node->left);
 	show_tree(depth + 1, 2*n + 1, node->right);
 }
 
-vector<vector<string>* >* Red_black_tree::show_tree()
+vector<vector<string> > Red_black_tree::show_tree()
 {
 	if (updated)
 	{
-		for (auto row : *current_tree)
-			delete row;
-		current_tree->clear();
+		current_tree.clear();
 	}
 	shared_ptr<Node> current_root = root;
 	show_tree(0, 0, current_root);
@@ -87,7 +85,6 @@ Red_black_tree::Red_black_tree()
 	root_par = shared_ptr<Node>(new Node(0));
 	root_par->color = Black;
 	root_par->left = root_par->right = root_par->parent = nullptr;
-	current_tree = new vector<vector<string>*>;
 }
 
 

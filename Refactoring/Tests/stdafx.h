@@ -5,6 +5,16 @@
 
 #pragma once
 
+#include <string>
+#include <vector>
+#include <memory>
+
+
+
+using std::string;
+using std::vector;
+using std::shared_ptr;
+
 #include "targetver.h"
 
 // Headers for CppUnitTest
