@@ -38,13 +38,13 @@ int main()
 	
 	ifstream fin("data.txt");
 	Tree tree;
-	vector<Elem*> data;
+	vector<shared_ptr<Elem> > data;
 	for (int i = 0; i < 10; ++i)
 	{
 		int k;
 		string name, surname;
 		fin >> k >> name >> surname;
-		data.push_back(new Elem(k, name + " " + surname));
+		data.push_back(shared_ptr<Elem>(new Elem(k, name + " " + surname)));
 		tree.insert(data.back());
 
 	}
@@ -53,10 +53,10 @@ int main()
 	print_tree(v_tree);
 	cout << '\n';
 	
-	cout << '\n';
-
-
+#ifdef _MSC_VER
 	system("pause");
+#endif // _MSC_VER
+
 
 	
 }

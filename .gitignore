@@ -1,6 +1,7 @@
 *.sln
 *.vcxproj.filters
 *.vcxproj
+*.txt
 sqlite3.c
 sqlite3.h
 shell.c

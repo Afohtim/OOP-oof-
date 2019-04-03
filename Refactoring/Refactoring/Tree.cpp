@@ -1,7 +1,7 @@
 #include "Tree.h"
 
 
-void Tree::show_tree(int depth, int n, Node* node)
+void Tree::show_tree(int depth, int n, shared_ptr<Node> node)
 {
 	if (node == nullptr) return;
 	if (current_tree->size() < depth + 1)
@@ -21,7 +21,7 @@ vector<vector<string>* >* Tree::show_tree()
 			delete row;
 		current_tree->clear();
 	}
-	Node* current_root = root;
+	shared_ptr<Node> current_root = root;
 	show_tree(0, 0, current_root);
 	return current_tree;
 }
@@ -29,17 +29,17 @@ vector<vector<string>* >* Tree::show_tree()
 
 
 
-void Tree::insert(Elem* key)
+void Tree::insert(shared_ptr<Elem> key)
 {
 	if (root == nullptr)
 	{
-		root = new Node(key);
+		root = shared_ptr<Node>(new Node(key));
 		root->parent = root_par;
 		root->color = Black;
 		return;
 	}
-	Node* inserted = root;
-	Node* parent_node = root;
+	shared_ptr<Node> inserted = root;
+	shared_ptr<Node> parent_node = root;
 	bool finded_parent = false;
 	while (!finded_parent)
 	{
@@ -51,7 +51,7 @@ void Tree::insert(Elem* key)
 			}
 			else
 			{
-				inserted = new Node(key, parent_node);
+				inserted = shared_ptr<Node>(new Node(key, parent_node));
 				parent_node->left = inserted;
 				finded_parent = true;
 			}
@@ -64,7 +64,7 @@ void Tree::insert(Elem* key)
 			}
 			else
 			{
-				inserted = new Node(key, parent_node);
+				inserted = shared_ptr<Node>(new Node(key, parent_node));
 				parent_node->right = inserted;
 				finded_parent = true;
 			}
@@ -73,9 +73,9 @@ void Tree::insert(Elem* key)
 	insert_balance(inserted);
 }
 
-void Tree::erase(Elem* key)
+void Tree::erase(shared_ptr<Elem> key)
 {
-	Node* erased = find_node(key);
+	shared_ptr<Node> erased = find_node(key);
 	erase(erased);//PogU
 }
 
@@ -84,7 +84,7 @@ void Tree::erase(Elem* key)
 Tree::Tree()
 {
 	updated = true;
-	root_par = new Node(0);
+	root_par = shared_ptr<Node>(new Node(0));
 	root_par->color = Black;
 	root_par->left = root_par->right = root_par->parent = nullptr;
 	current_tree = new vector<vector<string>*>;
@@ -96,13 +96,13 @@ Tree::~Tree()
 	root = nullptr;
 }
 
-void Tree::insert_balance(Node* inserted)
+void Tree::insert_balance(shared_ptr<Node> inserted)
 {
 	while (inserted->parent->color == Red)
 	{
 		if (inserted->parent == inserted->parent->parent->left)
 		{
-			Node* uncle = inserted->parent->parent->right;
+			shared_ptr<Node> uncle = inserted->parent->parent->right;
 			if (uncle != nullptr && uncle->color == Red)
 			{
 				uncle->color = Black;
@@ -125,7 +125,7 @@ void Tree::insert_balance(Node* inserted)
 		}
 		else if (inserted->parent == inserted->parent->parent->right)
 		{
-			Node* uncle = inserted->parent->parent->left;
+			shared_ptr<Node> uncle = inserted->parent->parent->left;
 			if (uncle != nullptr && uncle->color == Red)
 			{
 				uncle->color = Black;
@@ -153,11 +153,11 @@ void Tree::insert_balance(Node* inserted)
 	root->color = Black;
 }
 
-void Tree::erase_balance(Node* erased, Node* parent)
+void Tree::erase_balance(shared_ptr<Node> erased, shared_ptr<Node> parent)
 {
 	while (erased == nullptr || erased != root && erased->color == Black)
 	{
-		Node* sibling;
+		shared_ptr<Node> sibling;
 		if (erased == parent->left)
 		{
 			sibling = parent->right;
@@ -232,9 +232,9 @@ void Tree::erase_balance(Node* erased, Node* parent)
 
 }
 
-void Tree::rotate_left(Node* pivot)
+void Tree::rotate_left(shared_ptr<Node> pivot)
 {
-	Node* rotated_node = pivot->right;
+	shared_ptr<Node> rotated_node = pivot->right;
 
 	pivot->right = rotated_node->left;
 	if (rotated_node->left != nullptr)
@@ -260,9 +260,9 @@ void Tree::rotate_left(Node* pivot)
 
 }
 
-void Tree::rotate_right(Node* pivot)		
+void Tree::rotate_right(shared_ptr<Node> pivot)		
 {
-	Node* rotated_node = pivot->left;
+	shared_ptr<Node> rotated_node = pivot->left;
 
 	pivot->left = rotated_node->right;
 	if (rotated_node->right != nullptr)
@@ -286,7 +286,7 @@ void Tree::rotate_right(Node* pivot)
 	pivot->parent = rotated_node;
 }
 
-Node * Tree::successor(Node* node)
+shared_ptr<Node> Tree::successor(shared_ptr<Node> node)
 {
 	if (node->left != nullptr)
 	{
@@ -305,9 +305,9 @@ Node * Tree::successor(Node* node)
 	
 }
 
-Node * Tree::find_node(Elem* key)
+shared_ptr<Node> Tree::find_node(shared_ptr<Elem> key)
 {
-	Node* temp_node = root;
+	shared_ptr<Node> temp_node = root;
 	while (temp_node != nullptr)
 	{
 		if (key->key == temp_node->key->key)
@@ -321,17 +321,17 @@ Node * Tree::find_node(Elem* key)
 	return nullptr;
 }
 
-void Tree::erase(Node* erased)
+void Tree::erase(shared_ptr<Node> erased)
 {
 	if (erased == nullptr)
 		return;
-	Node* to_remove;
+	shared_ptr<Node> to_remove;
 	if (erased->left == nullptr || erased->right == nullptr)
 		to_remove = erased;
 	else
 		to_remove = successor(erased);
 
-	Node* removed_son;
+	shared_ptr<Node> removed_son;
 	if (to_remove->left != nullptr)
 		removed_son = to_remove->left;
 	else
@@ -354,19 +354,18 @@ void Tree::erase(Node* erased)
 	{
 		erased->key = to_remove->key; //copy 
 	}
-	Node* parent_node = to_remove->parent;
+	shared_ptr<Node> parent_node = to_remove->parent;
 	while (parent_node != root_par)
 	{
 		parent_node = parent_node->parent;
 	}
 	if (to_remove->color == Black)
 		erase_balance(removed_son, to_remove->parent);
-	delete to_remove;
 }
 
 
 
-Node::Node(Elem* key, Node * parent, int node_color)
+Node::Node(shared_ptr<Elem> key, shared_ptr<Node> parent, int node_color)
 {
 	this->key = key;
 	this->parent = parent;
