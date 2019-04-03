@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void print_tree(vector<vector<string> > v_tree)
+void print_tree(vector<vector<pair<Elem, int > > > v_tree)
 {
 	ofstream fout("tree.txt");
 	int k = 1;
@@ -16,8 +16,8 @@ void print_tree(vector<vector<string> > v_tree)
 		fout << k << "r ";
 		for (auto val : row)
 		{
-			cout << (val == "" ? "." : val) << ' ';
-			fout << (val == "" ? "." : val) << ' ';
+			cout << (val.first.data == "" ? "." : std::to_string(val.first.id) + ":" + val.first.data + ":" + std::to_string(val.second) ) << ' ';
+			fout << (val.first.data == "" ? "." : std::to_string(val.first.id) + ":" + val.first.data + ":" + std::to_string(val.second) ) << ' ';
 		}
 		
 		cout << '\n';
@@ -31,7 +31,7 @@ int main()
 
 	
 	ifstream fin("data.txt");
-	Red_black_tree tree;
+	Red_black_tree<Elem> tree;
 	vector<shared_ptr<Elem> > data;
 	for (int i = 0; i < 10; ++i)
 	{
@@ -43,7 +43,7 @@ int main()
 
 	}
 	
-	vector<vector<string> > v_tree;
+	vector<vector<pair<Elem, int > > > v_tree;
 	v_tree = tree.show_tree();
 	print_tree(v_tree);
 	cout << '\n';

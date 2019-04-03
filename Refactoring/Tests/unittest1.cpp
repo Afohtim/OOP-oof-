@@ -9,7 +9,7 @@ using std::ofstream;
 using std::ifstream;
 //using std::getline;
 
-void print_tree(vector<vector<string> > v_tree)
+void print_tree(vector<vector<pair<Elem, int > > > v_tree)
 {
 	ofstream fout("tree.txt");
 	int k = 1;
@@ -17,8 +17,9 @@ void print_tree(vector<vector<string> > v_tree)
 	{
 		for (auto val : row)
 		{
-			fout << (val == "" ? "." : val) << ' ';
+			fout << (val.first.data == "" ? "." : std::to_string(val.first.id) + ":" + val.first.data + ":" + std::to_string(val.second)) << ' ';
 		}
+
 		fout << '\n';
 		++k;
 	}
@@ -44,12 +45,12 @@ namespace Tests
 		
 		TEST_METHOD(TestClassInit)
 		{
-			Red_black_tree tree;
+			Red_black_tree<Elem> tree;
 			Assert::IsTrue(true);
 		}
 		TEST_METHOD(InsertRoot)
 		{
-			Red_black_tree tree;
+			Red_black_tree<Elem> tree;
 			tree.insert(shared_ptr<Elem>(new Elem(1, "1")));
 
 
@@ -67,7 +68,7 @@ namespace Tests
 
 		TEST_METHOD(Insert10Elements)
 		{
-			Red_black_tree tree;
+			Red_black_tree<Elem> tree;
 
 			for (int i = 0; i < 10; ++i)
 			{
@@ -89,7 +90,7 @@ namespace Tests
 
 		TEST_METHOD(Insert15Delete5Elem)
 		{
-			Red_black_tree tree;
+			Red_black_tree<Elem> tree;
 
 			for (int i = 0; i < 15; ++i)
 			{
