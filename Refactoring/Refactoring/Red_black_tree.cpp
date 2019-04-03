@@ -1,7 +1,7 @@
-#include "Tree.h"
+#include "Red_black_tree.h"
 
 
-void Tree::show_tree(int depth, int n, shared_ptr<Node> node)
+void Red_black_tree::show_tree(int depth, int n, shared_ptr<Node> node)
 {
 	if (node == nullptr) return;
 	if (current_tree->size() < depth + 1)
@@ -13,7 +13,7 @@ void Tree::show_tree(int depth, int n, shared_ptr<Node> node)
 	show_tree(depth + 1, 2*n + 1, node->right);
 }
 
-vector<vector<string>* >* Tree::show_tree()
+vector<vector<string>* >* Red_black_tree::show_tree()
 {
 	if (updated)
 	{
@@ -29,7 +29,7 @@ vector<vector<string>* >* Tree::show_tree()
 
 
 
-void Tree::insert(shared_ptr<Elem> key)
+void Red_black_tree::insert(shared_ptr<Elem> key)
 {
 	if (root == nullptr)
 	{
@@ -73,7 +73,7 @@ void Tree::insert(shared_ptr<Elem> key)
 	insert_balance(inserted);
 }
 
-void Tree::erase(shared_ptr<Elem> key)
+void Red_black_tree::erase(shared_ptr<Elem> key)
 {
 	shared_ptr<Node> erased = find_node(key);
 	erase(erased);//PogU
@@ -81,7 +81,7 @@ void Tree::erase(shared_ptr<Elem> key)
 
 
 
-Tree::Tree()
+Red_black_tree::Red_black_tree()
 {
 	updated = true;
 	root_par = shared_ptr<Node>(new Node(0));
@@ -91,12 +91,12 @@ Tree::Tree()
 }
 
 
-Tree::~Tree()
+Red_black_tree::~Red_black_tree()
 {
 	root = nullptr;
 }
 
-void Tree::insert_balance(shared_ptr<Node> inserted)
+void Red_black_tree::insert_balance(shared_ptr<Node> inserted)
 {
 	while (inserted->parent->color == Red)
 	{
@@ -153,7 +153,7 @@ void Tree::insert_balance(shared_ptr<Node> inserted)
 	root->color = Black;
 }
 
-void Tree::erase_balance(shared_ptr<Node> erased, shared_ptr<Node> parent)
+void Red_black_tree::erase_balance(shared_ptr<Node> erased, shared_ptr<Node> parent)
 {
 	while (erased == nullptr || erased != root && erased->color == Black)
 	{
@@ -232,7 +232,7 @@ void Tree::erase_balance(shared_ptr<Node> erased, shared_ptr<Node> parent)
 
 }
 
-void Tree::rotate_left(shared_ptr<Node> pivot)
+void Red_black_tree::rotate_left(shared_ptr<Node> pivot)
 {
 	shared_ptr<Node> rotated_node = pivot->right;
 
@@ -260,7 +260,7 @@ void Tree::rotate_left(shared_ptr<Node> pivot)
 
 }
 
-void Tree::rotate_right(shared_ptr<Node> pivot)		
+void Red_black_tree::rotate_right(shared_ptr<Node> pivot)		
 {
 	shared_ptr<Node> rotated_node = pivot->left;
 
@@ -286,7 +286,7 @@ void Tree::rotate_right(shared_ptr<Node> pivot)
 	pivot->parent = rotated_node;
 }
 
-shared_ptr<Node> Tree::successor(shared_ptr<Node> node)
+shared_ptr<Node> Red_black_tree::successor(shared_ptr<Node> node)
 {
 	if (node->left != nullptr)
 	{
@@ -305,7 +305,7 @@ shared_ptr<Node> Tree::successor(shared_ptr<Node> node)
 	
 }
 
-shared_ptr<Node> Tree::find_node(shared_ptr<Elem> key)
+shared_ptr<Node> Red_black_tree::find_node(shared_ptr<Elem> key)
 {
 	shared_ptr<Node> temp_node = root;
 	while (temp_node != nullptr)
@@ -321,7 +321,7 @@ shared_ptr<Node> Tree::find_node(shared_ptr<Elem> key)
 	return nullptr;
 }
 
-void Tree::erase(shared_ptr<Node> erased)
+void Red_black_tree::erase(shared_ptr<Node> erased)
 {
 	if (erased == nullptr)
 		return;

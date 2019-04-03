@@ -29,7 +29,7 @@ struct Node
 
 };
 
-class Tree
+class Red_black_tree
 {
 private:
 	shared_ptr<Node> root;
@@ -53,7 +53,7 @@ public:
 	vector<vector<string>* >* show_tree();
 	void insert(shared_ptr<Elem> key);
 	void erase(shared_ptr<Elem> key);
-	Tree();
-	~Tree();
+	Red_black_tree();
+	~Red_black_tree();
 };
 

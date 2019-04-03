@@ -1,5 +1,5 @@
 ﻿#include <iostream>
-#include "Tree.h"
+#include "Red_black_tree.h"
 #include <fstream>
 #include <clocale>
 #include <Windows.h>
@@ -37,7 +37,7 @@ int main()
 
 	
 	ifstream fin("data.txt");
-	Tree tree;
+	Red_black_tree tree;
 	vector<shared_ptr<Elem> > data;
 	for (int i = 0; i < 10; ++i)
 	{
