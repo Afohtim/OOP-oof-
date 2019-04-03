@@ -11,3 +11,4 @@ Rules - rules of subreddit.
 Tags - tags that save you from unexpected information such as NSFW, Spoiler, Epilepsy warning
 NSFW - Not safe for work
 Spoiler - Dumbledore dies, Luke had a father, Neo is the one etc. 
+DM - direct message 
