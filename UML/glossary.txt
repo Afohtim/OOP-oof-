@@ -10,5 +10,5 @@ Mod/Moderator - person who is responsible for subbredit or whole reddit (differe
 Rules - rules of subreddit.
 Tags - tags that save you from unexpected information such as NSFW, Spoiler, Epilepsy warning
 NSFW - Not safe for work
-Spoiler - Dumbledore dies, Luke had a father, Neo is the one etc. 
 DM - direct message 
+Subreddit info - Related communities, external links, subreddit resources, wiki

@@ -37,7 +37,6 @@ struct Node
 
 };
 
-
 template<class T>
 class Red_black_tree
 {
